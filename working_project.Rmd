@@ -29,9 +29,18 @@ Section created by Alejandra Rios
 
 ```{r Import Packages, warning=FALSE, message=FALSE}
 #import packages
-library(tidyverse);library(lubridate);library(viridis);library(here);library(rvest);
-library(dataRetrieval);library(dplyr); library(readr);library(stringr);library(sf); 
-library(mapview); mapviewOptions(fgb = FALSE);library(RColorBrewer)
+library(tidyverse)
+library(lubridate)
+library(viridis)
+library(here)
+library(rvest);
+library(dataRetrieval)
+library(dplyr)
+library(readr)
+library(stringr)
+library(sf); 
+library(mapview); mapviewOptions(fgb = FALSE)
+library(RColorBrewer)
 ```
 
 ```{r Get Working Directory, warning=FALSE, message=FALSE}
