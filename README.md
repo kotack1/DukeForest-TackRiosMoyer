@@ -1,17 +1,19 @@
-# <Repository Title>
-<Instructions: copy and paste this template into your project README file (found in the parent folder of the repository). Fill in relevant information as requested.>
-
-<General notes: add as much information as is relevant for your repository. Some overarching guidelines are provided, but feel free to expand on these guidelines.>
-<More resources found here: https://www.dataone.org/all-best-practices>
-<Delete the text inside the brackets when formatting your file.>
+# Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera Traps
 
 ## Summary
 
 <describe the purpose of this repository, the information it contains, and any relevant analysis goals. What, why, where, when, how?>
 
+This repository was created to house the final Environmental Data Analysis project for Katie Tack, Ale Rios, Grace Randall, and Sophie Moyer. Their project focuses on white-tailed deer in the Duke Forest (Durham, Blackwood, and Korstian divisions)
+The data was collected through the lab of Dr. Sarah Roberts, whose team (including Katie Tack) placed camera traps along known migration paths. The information collected includes common_name, deployment_id, start_date, start_time, end_date, end_time, cam_id, and group_size. There is another file that contains the longitude and latitude for each camera (deployment_id). 
+The analysis goals of this project are to determine the movements of white-tailed deer in the Duke Forest based on time of day and moon phase.
+
 ## Investigators
 
-<name(s), affiliation(s), contact information, roles (if applicable)>
+Katie Tack, Duke Master of Environmental Management Canidate, katie.tack@duke.edu
+Ale Rios, Duke Master of Environmental Management Canidate, alejandra.rios@duke.edu
+Grand Randall, Duke Master of Environmental Management Canidate, grace.randall@duke.edu
+Sophie Moyer, Duke Master of Environmental Management Canidate, sophie.moyer@duke.edu
 
 ## Keywords
 
