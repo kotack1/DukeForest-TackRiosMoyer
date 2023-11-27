@@ -12,7 +12,7 @@ The data used in this project is of animal sightings on the trail cameras around
 
 ## Hypotheses: 
 
-1. We aim to determine the population size of white-tail deer in the Duke forest.
+1. We aim to determine how time of day and moon phases affect the movement of the deer population in the Duke Forest.
 1. We aim to measure which areas of the forest were most frequented relative to development. (Source: Oleniacz, L. (2022, October 27). Scientists track triangle deer to learn how they deal with development. NC State University. Retrieved from https://news.ncsu.edu/2022/10/scientists-track-triangle-deer-to-learn-how-they-deal-with-development/)
 
 ## Background: 
@@ -167,10 +167,24 @@ Section created by Grace Randall
 ## Data Visualization & Plots
 Section created by Katie Tack
 
-### SUBHEADING 1 HERE
+### Custom Theme for Plots
 
-```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
-#CODE CHUNK 1 HERE
+```{r Custom Theme, warning=FALSE, message=FALSE}
+#custom theme to use for future plots
+custom.theme <- function() {
+  theme_minimal() + 
+  theme(
+    panel.background = element_rect(fill = "seashell"),
+    panel.grid.major = element_line(colour = "gray", linetype = "dashed"),
+    axis.line = element_line(colour = "black", size = 0.5),
+    axis.text = element_text(size = 10, color = "salmon3", angle = 45),
+    axis.title = element_text(size = 12, face = "bold", color = "salmon4"),
+    plot.title = element_text(size = 16, color = "black", face = "bold", hjust = 0.5),
+    legend.text = element_text(size = 10, color = "salmon3"),
+    legend.title = element_text(size = 12, color = "salmon4", face = "bold"),
+    legend.position = "right"
+  )
+}
 
 ```
 
