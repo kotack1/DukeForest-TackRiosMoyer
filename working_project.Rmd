@@ -8,8 +8,7 @@ toc: true
 
 ## Content: 
 
-Data is of animal sightings on the trail cameras around the Duke forest and the spatial data of the Duke forest.
-Data was collected as part of an ongoing project monitoring the white-tail deer population.
+The data used in this project is of animal sightings on the trail cameras around the Duke forest and the spatial data of the Duke forest;it was collected as part of an ongoing project monitoring the white-tail deer population.
 
 ## Hypotheses: 
 
