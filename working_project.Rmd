@@ -2,44 +2,72 @@
 title: "Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera Traps"
 author: "Sophie Moyer, Grace Randall, Ale Rios, Katie Tack"
 date: "`r Sys.Date()`"
-output: html_document
+output: pdf_document
+toc: true
 ---
 
-#EDA Final Project
-#Step 1: Data Wrangling by Alejandra Rios
+## Content: 
 
-#Content: Data is of animal sightings on the trail cameras around the Duke forest and the spatial data of the Duke forest.
-#Data was collected as part of an ongoing project monitoring the white-tail deer population.
+Data is of animal sightings on the trail cameras around the Duke forest and the spatial data of the Duke forest.
+Data was collected as part of an ongoing project monitoring the white-tail deer population.
 
-#Hypothesis: we aim to determine the population size of white-tail deer in the Duke forest.
-#Hypothesis 2: we aim to measure which areas of the forest were most frequented relative to development. (Source: Oleniacz, L. (2022, October 27). Scientists track triangle deer to learn how they deal with development. NC State University. Retrieved from https://news.ncsu.edu/2022/10/scientists-track-triangle-deer-to-learn-how-they-deal-with-development/)
+## Hypotheses: 
 
-#Background: to conduct a deer survey with trail cameras, one camera must be placed every 160 or so acres. (Source: Thomas Jr., L. (2012, April 19). How to run a trail-camera survey. Quality Deer Management Association.)
-#The Duke forest is 7,000 acres.(Source: Duke University. (n.d.). Duke Forest – Teaching and Research Laboratory. Retrieved from https://dukeforest.duke.edu)
-#There are 30 trail cameras in the Duke forest along known migration paths.
+1. We aim to determine the population size of white-tail deer in the Duke forest.
+1. We aim to measure which areas of the forest were most frequented relative to development. (Source: Oleniacz, L. (2022, October 27). Scientists track triangle deer to learn how they deal with development. NC State University. Retrieved from https://news.ncsu.edu/2022/10/scientists-track-triangle-deer-to-learn-how-they-deal-with-development/)
 
+## Background: 
+
+To conduct a deer survey with trail cameras, one camera must be placed every 160 or so acres. (Source: Thomas Jr., L. (2012, April 19). How to run a trail-camera survey. Quality Deer Management Association.)
+The Duke forest is 7,000 acres.(Source: Duke University. (n.d.). Duke Forest – Teaching and Research Laboratory. Retrieved from https://dukeforest.duke.edu)
+There are 30 trail cameras in the Duke forest along known migration paths.
+
+## Setup & Data Wrangling
+Section created by Alejandra Rios
+
+### Importing & Working Directory
+
+```{r Import Packages, warning=FALSE, message=FALSE}
 #import packages
 library(tidyverse);library(lubridate);library(viridis);library(here);library(rvest);
 library(dataRetrieval);library(dplyr); library(readr);library(stringr);library(sf); 
 library(mapview); mapviewOptions(fgb = FALSE);library(RColorBrewer)
+```
 
+```{r Get Working Directory, warning=FALSE, message=FALSE}
 #get working directory
 here()
+```
 
+```{r Read in Files, warning=FALSE, message=FALSE}
 #read excel file 
 trailcam_csv <- read.csv(here("sequences.csv"))
+```
 
+---
+
+### Date & Time Objects
+
+```{r Date as Objects, warning=FALSE, message=FALSE}
 #date as objects
 trailcam_csv$start_time <- ymd_hms(trailcam_csv$start_time)
 trailcam_csv$end_time <- ymd_hms(trailcam_csv$end_time)
+```
 
+```{r Separate Date & Time, warning=FALSE, message=FALSE}
 #separate date and time
 trailcam_csv$start_date <- as.Date(trailcam_csv$start_time)
 trailcam_csv$start_time <- format(trailcam_csv$start_time, "%H:%M:%S")
 
 trailcam_csv$end_date <- as.Date(trailcam_csv$end_time)  
 trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H:%M:%S") 
+```
 
+---
+
+### Filtering & Joining
+
+```{r Filtering, warning=FALSE, message=FALSE}
 #filter for white- tailed deer, select relevant columns, and isolate trail camera id number.
 deer_data <- trailcam_csv %>%
   filter(common_name == "White-tailed Deer") %>%
@@ -55,7 +83,10 @@ cam_coordinates <- cam_coordinates %>%
   select(No., Longitude, Latitude) %>%
 #  rename(cam_id = No.)
 #NEED TO FIGURE OUT COORDINATES FOR TRAIL CAMS 
+```
 
+
+```{r Joining, warning=FALSE, message=FALSE}
 #join deer data with trail camera coordinate data to find where 
 deer_cam_data <- left_join(deer_data, cam_coordinates, by = "cam_id")
 
@@ -63,6 +94,86 @@ deer_cam_data <- left_join(deer_data, cam_coordinates, by = "cam_id")
 here("Duke University/Documents/EDE_Fall2023/DukeForest-TackRiosMoyer/duke-forest-spatial-data/duke-forest-spatial-data/Boundary")
 forest_sf <- st_read("Duke_Forest_Boundary_Mar2022.shp")
 mapview(forest_sf)
+```
 
+---
+
+### Coverting to Dataframe
+
+```{r Converting, warning=FALSE, message=FALSE}
 #convert coordinates to a spatial dataframe
 deer_cam_data_sf <- deer_cam_data_sf %>% st_as_sf(coords = c("Longtitude","Latitude"), crs=4326)
+```
+
+---
+
+
+## Statistical Tests & Machine Learning
+Section created by Sophie Moyer
+
+### SUBHEADING 1 HERE
+
+```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+#CODE CHUNK 1 HERE
+
+```
+
+
+---
+
+### SUBHEADING 2 HERE
+
+```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+#CODE CHUNK 2 HERE
+
+```
+
+---
+
+
+## Spatial Analysis & Maps
+Section created by Grace Randall
+
+### SUBHEADING 1 HERE
+
+```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+#CODE CHUNK 1 HERE
+
+```
+
+
+---
+
+### SUBHEADING 2 HERE
+
+```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+#CODE CHUNK 2 HERE
+
+```
+
+---
+
+---
+
+
+## Data Visualization & Plots
+Section created by Katie Tack
+
+### SUBHEADING 1 HERE
+
+```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+#CODE CHUNK 1 HERE
+
+```
+
+
+---
+
+### SUBHEADING 2 HERE
+
+```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+#CODE CHUNK 2 HERE
+
+```
+
+---
