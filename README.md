@@ -31,8 +31,20 @@
 > sophie.moyer@duke.edu
 
 ## Keywords
-
-<add relevant keywords here>
+- Duke University
+- Duke Forest
+- Nicholas School of the Environment
+- camera traps
+- white-tailed deer
+- moon phases
+- trail camera survey
+- deer migration
+- deer management
+- deer migration
+- Durham
+- Blackwood
+- Korstian
+- deer population
 
 ## Database Information
 
