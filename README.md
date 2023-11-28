@@ -2,8 +2,6 @@
 
 ## Summary
 
-<describe the purpose of this repository, the information it contains, and any relevant analysis goals. What, why, where, when, how?>
-
 Repository Summary
 
 > This repository was created to house the final Environmental Data Analysis project for Katie Tack, Ale Rios, Grace Randall, and Sophie Moyer. Their project focuses on white-tailed deer in the Duke Forest (Durham, Blackwood, and Korstian divisions)
@@ -16,10 +14,17 @@ Project Goals
 
 ## Investigators
 
-Katie Tack, Duke Master of Environmental Management Canidate, katie.tack@duke.edu;
-Ale Rios, Duke Master of Environmental Management Canidate, alejandra.rios@duke.edu;
-Grand Randall, Duke Master of Environmental Management Canidate, grace.randall@duke.edu;
-Sophie Moyer, Duke Master of Environmental Management Canidate, sophie.moyer@duke.edu;
+Katie Tack
+> Duke Master of Environmental Management Canidate, katie.tack@duke.edu
+
+Alejandra Rios
+> Duke Master of Environmental Management Canidate, alejandra.rios@duke.edu
+
+Grace Randall
+> Duke Master of Environmental Management Canidate, grace.randall@duke.edu
+
+Sophie Moyer
+> Duke Master of Environmental Management Canidate, sophie.moyer@duke.edu
 
 ## Keywords
 
