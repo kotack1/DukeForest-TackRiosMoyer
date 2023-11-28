@@ -14,16 +14,16 @@ Project Goals
 
 ## Investigators
 
-Katie Tack
+**Katie Tack**
 > Duke Master of Environmental Management Canidate, katie.tack@duke.edu
 
-Alejandra Rios
+**Alejandra Rios**
 > Duke Master of Environmental Management Canidate, alejandra.rios@duke.edu
 
-Grace Randall
+**Grace Randall**
 > Duke Master of Environmental Management Canidate, grace.randall@duke.edu
 
-Sophie Moyer
+**Sophie Moyer**
 > Duke Master of Environmental Management Canidate, sophie.moyer@duke.edu
 
 ## Keywords
