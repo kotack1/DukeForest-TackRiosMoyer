@@ -50,6 +50,7 @@ here()
 ```{r Read in Files, warning=FALSE, message=FALSE}
 #read excel file 
 trailcam_csv <- read.csv(here("sequences.csv"))
+moon_phases_csv <- read.csv(here("moon_phases.csv"))
 ```
 
 ---
@@ -60,15 +61,17 @@ trailcam_csv <- read.csv(here("sequences.csv"))
 #date as objects
 trailcam_csv$start_time <- ymd_hms(trailcam_csv$start_time)
 trailcam_csv$end_time <- ymd_hms(trailcam_csv$end_time)
+moon_phases_csv$start_date <- as.Date(moon_phases_csv$start_date)
 ```
 
 ```{r Separate Date & Time, warning=FALSE, message=FALSE}
 #separate date and time
 trailcam_csv$start_date <- as.Date(trailcam_csv$start_time)
-trailcam_csv$start_time <- format(trailcam_csv$start_time, "%H:%M:%S")
+trailcam_csv$start_time <- format(trailcam_csv$start_time, "%H")
+trailcam_csv$month <- month(as.Date(trailcam_csv$start_date))
 
 trailcam_csv$end_date <- as.Date(trailcam_csv$end_time)  
-trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H:%M:%S") 
+trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H") 
 ```
 
 ---
@@ -79,13 +82,13 @@ trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H:%M:%S")
 #filter for white- tailed deer, select relevant columns, and isolate trail camera id number.
 deer_data <- trailcam_csv %>%
   filter(common_name == "White-tailed Deer") %>%
-  select(common_name, deployment_id, start_date, start_time, end_date, end_time, group_size) %>%
+  select(common_name, deployment_id, start_date, start_time, group_size, month) %>%
   mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+")))
 #cam_id refers to the camera id number
 #mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+"))) taken from stackoverflow
 
 #read file with trail camera coordinates (delivered as a .xlsx and converted to a .csv)
-cam_coordinates <- read.csv(here("camera_coords.csv"))
+cam_coords <- read.csv(here("camera_coords.csv"))
 
 #Select id number and coordinates
 cam_coordinates <- cam_coords %>%
@@ -96,7 +99,19 @@ cam_coordinates <- cam_coords %>%
 ```{r Joining, warning=FALSE, message=FALSE}
 #join deer data with trail camera coordinate data to find where cameras are, and clean up data
 deer_cam_data <- left_join(deer_data, cam_coordinates, by = "cam_id") %>%
-  select(common_name, start_date, start_time, end_date, end_time, group_size, cam_id, longitude, latitude)
+  select(common_name, start_date, start_time, group_size, cam_id, longitude, latitude, month)
+deer_cam_data <- left_join(deer_cam_data, moon_phases_csv, by = "start_date")
+
+#categorize hours into groups
+deer_cam_data$start_time <- as.numeric(deer_cam_data$start_time)
+categorize_time <- function(hour) {
+  ifelse(hour >= 6 & hour < 12, "Morning",
+         ifelse(hour >= 12 & hour < 20, "Afternoon", "Evening"))
+}
+deer_cam_data$time_category <- cut(deer_cam_data$start_time, 
+                                   breaks = c(-Inf, 5.99, 11.99, 19.99, Inf),
+                                   labels = c("Evening", "Morning", "Afternoon", "Evening"),
+                                   right = FALSE)
 
 #read Duke forest boundary shapefile into project
 here("Duke University/Documents/EDE_Fall2023/DukeForest-TackRiosMoyer/duke-forest-spatial-data/duke-forest-spatial-data/Boundary")
@@ -176,9 +191,9 @@ custom.theme <- function() {
   theme_minimal() + 
   theme(
     panel.background = element_rect(fill = "seashell"),
-    panel.grid.major = element_line(colour = "gray", linetype = "dashed"),
+    panel.grid.major = element_line(colour = "bisque2", linetype = "dashed"),
     axis.line = element_line(colour = "black", size = 0.5),
-    axis.text = element_text(size = 10, color = "salmon3", angle = 45),
+    axis.text = element_text(size = 10, color = "salmon3", angle = 10),
     axis.title = element_text(size = 12, face = "bold", color = "salmon4"),
     plot.title = element_text(size = 16, color = "black", face = "bold", hjust = 0.5),
     legend.text = element_text(size = 10, color = "salmon3"),
@@ -192,11 +207,73 @@ custom.theme <- function() {
 
 ---
 
-### SUBHEADING 2 HERE
+### Group Size
 
-```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
-#CODE CHUNK 2 HERE
+```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
+#scatter plot of group size and time of day
+deer.timeofday <- 
+  ggplot(deer_cam_data, aes(x = start_time, y = group_size)) +
+  geom_point() +
+  geom_smooth(method = lm, color="black") +
+  labs(
+    title = "Group Size of Deer Seen on Camera Based on Time of Day",
+    x = "Time of Day (hour)",
+    y = "Group Size"
+  ) +
+  custom.theme()
 
+print(deer.timeofday)
 ```
+
+```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
+#scatter plot of group size and time of day
+deer.moonphase <- 
+  ggplot(deer_cam_data, aes(x = moon_phase, y = group_size)) +
+  geom_point() +
+  geom_smooth(method = lm, color="black") +
+  labs(
+    title = "Group Size of Deer Seen on Camera Based on Moon Phase",
+    x = "Moon Phase",
+    y = "Group Size"
+  ) +
+  scale_x_discrete(labels = c("new moon", "waxing crescent", "first quarter", "waxing gibbous", "full moon", "waning gibbous", "third quarter", "waning crescent")) +
+  scale_y_continuous(breaks = seq(0, ceiling(max(deer_cam_data$group_size)), by = 1)) +
+  custom.theme()
+
+print(deer.moonphase)
+```
+
+```{r Moon Phase & Time of Day, warning=FALSE, message=FALSE}
+#scatter plot of group size and time of day
+deer.moonphase.time <- 
+  ggplot(deer_cam_data, aes(x = moon_phase, y = start_time)) +
+  geom_point() +
+  geom_smooth(method = lm, color="black") +
+  labs(
+    title = "Deer Seen on Camera Based on Moon Phase and Time of Day",
+    x = "Moon Phase",
+    y = "Time of Day (hour)"
+  ) +
+  custom.theme()
+
+print(deer.moonphase.time)
+```
+
+
+```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
+#scatter plot of group size and time of day
+deer.time.month <- 
+  ggplot(deer_cam_data, aes(x = time_category, y = group_size, color = month, group = month)) +
+  geom_point() +
+  labs(
+    title = "Deer Seen on Camera Based on Moon Phase and Time of Day",
+    x = "Moon Phase",
+    y = "Time of Day (hour)"
+  ) +
+  custom.theme()
+
+print(deer.time.month)
+```
+
 
 ---
