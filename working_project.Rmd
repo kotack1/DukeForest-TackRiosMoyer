@@ -2,8 +2,9 @@
 title: "Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera Traps"
 author: "Sophie Moyer, Grace Randall, Ale Rios, Katie Tack"
 date: "`r Sys.Date()`"
-output: pdf_document
-toc: true
+output:
+  html_document:
+    toc: true
 ---
 
 ## Content: 
@@ -21,10 +22,9 @@ To conduct a deer survey with trail cameras, one camera must be placed every 160
 The Duke forest is 7,000 acres.(Source: Duke University. (n.d.). Duke Forest – Teaching and Research Laboratory. Retrieved from https://dukeforest.duke.edu)
 There are 30 trail cameras in the Duke forest along known migration paths.
 
-## Setup & Data Wrangling
-Section created by Alejandra Rios
+## Setup & Data Wrangling:
 
-### Importing & Working Directory
+### Importing Packages & Files
 
 ```{r Import Packages, warning=FALSE, message=FALSE}
 #import packages
@@ -55,7 +55,7 @@ moon_phases_csv <- read.csv(here("Data", "Raw", "moon_phases.csv"))
 
 ---
 
-### Date & Time Objects
+### Creating Date & Time Objects
 
 ```{r Date as Objects, warning=FALSE, message=FALSE}
 #date as objects
@@ -69,6 +69,7 @@ moon_phases_csv$start_date <- as.Date(moon_phases_csv$start_date)
 trailcam_csv$start_date <- as.Date(trailcam_csv$start_time)
 trailcam_csv$start_time <- format(trailcam_csv$start_time, "%H")
 trailcam_csv$month <- month(as.Date(trailcam_csv$start_date))
+trailcam_csv$month_name <- month.name[trailcam_csv$month]
 
 trailcam_csv$end_date <- as.Date(trailcam_csv$end_time)  
 trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H") 
@@ -76,19 +77,20 @@ trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H")
 
 ---
 
-### Filtering & Joining
+### Filtering Joining & Categorizing
 
 ```{r Filtering, warning=FALSE, message=FALSE}
 #filter for white- tailed deer, select relevant columns, and isolate trail camera id number.
 deer_data <- trailcam_csv %>%
   filter(common_name == "White-tailed Deer") %>%
-  select(common_name, deployment_id, start_date, start_time, group_size, month) %>%
-  mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+")))
+  select(common_name, deployment_id, start_date, start_time, group_size, month, month_name) %>%
+  mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+")),
+                             division = str_extract(deployment_id, "\\((.*?)\\)"))
 #cam_id refers to the camera id number
 #mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+"))) taken from stackoverflow
 
 #read file with trail camera coordinates (delivered as a .xlsx and converted to a .csv)
-cam_coords <- read.csv(here("camera_coords.csv"))
+cam_coords <- read.csv(here("Data", "Raw", "camera_coords.csv"))
 
 #Select id number and coordinates
 cam_coordinates <- cam_coords %>%
@@ -99,7 +101,7 @@ cam_coordinates <- cam_coords %>%
 ```{r Joining, warning=FALSE, message=FALSE}
 #join deer data with trail camera coordinate data to find where cameras are, and clean up data
 deer_cam_data <- left_join(deer_data, cam_coordinates, by = "cam_id") %>%
-  select(common_name, start_date, start_time, group_size, cam_id, longitude, latitude, month)
+  select(common_name, start_date, start_time, group_size, cam_id, division, longitude, latitude, month, month_name)
 deer_cam_data <- left_join(deer_cam_data, moon_phases_csv, by = "start_date")
 
 #categorize hours into groups
@@ -113,27 +115,39 @@ deer_cam_data$time_category <- cut(deer_cam_data$start_time,
                                    labels = c("Evening", "Morning", "Afternoon", "Evening"),
                                    right = FALSE)
 
+categorize_moon_phase <- function(phase) {
+  phase_lower <- tolower(phase)
+  if (grepl("full", phase_lower) || grepl("gibbous", phase_lower)) {
+    return("FullAndGibbous")
+  } else if (grepl("new", phase_lower) || grepl("crescent", phase_lower)) {
+    return("NewAndCrescent")
+  } else {
+    return("QuarterMoon")
+  }
+}
+
+deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phase)
+
 #read Duke forest boundary shapefile into project
-here("Duke University/Documents/EDE_Fall2023/DukeForest-TackRiosMoyer/duke-forest-spatial-data/duke-forest-spatial-data/Boundary")
-forest_sf <- st_read("Duke_Forest_Boundary_Mar2022.shp")
-mapview(forest_sf)
+#here("Duke University/Documents/EDE_Fall2023/DukeForest-TackRiosMoyer/duke-forest-spatial-data/duke-forest-spatial-data/Boundary")
+#forest_sf <- st_read("Duke_Forest_Boundary_Mar2022.shp")
+#mapview(forest_sf)
 
 ```
 
 ---
 
-### Coverting to Dataframe
+### Coverting Spatial Data to Dataframe
 
 ```{r Converting, warning=FALSE, message=FALSE}
 #convert coordinates to a spatial dataframe
-deer_cam_data_sf <- deer_cam_data_sf %>% st_as_sf(coords = c("Longtitude","Latitude"), crs=4326)
+#deer_cam_data_sf <- deer_cam_data_sf %>% st_as_sf(coords = c("Longtitude","Latitude"), crs=4326)
 ```
 
 ---
 
 
-## Statistical Tests & Machine Learning
-Section created by Sophie Moyer
+## Statistical Tests & Machine Learning:
 
 ### SUBHEADING 1 HERE
 
@@ -147,7 +161,7 @@ Section created by Sophie Moyer
 
 ### SUBHEADING 2 HERE
 
-```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+```{r INSERT INFO HERE2, warning=FALSE, message=FALSE}
 #CODE CHUNK 2 HERE
 
 ```
@@ -155,12 +169,11 @@ Section created by Sophie Moyer
 ---
 
 
-## Spatial Analysis & Maps
-Section created by Grace Randall
+## Spatial Analysis & Maps:
 
 ### SUBHEADING 1 HERE
 
-```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+```{r INSERT INFO HERE3, warning=FALSE, message=FALSE}
 #CODE CHUNK 1 HERE
 
 ```
@@ -170,7 +183,7 @@ Section created by Grace Randall
 
 ### SUBHEADING 2 HERE
 
-```{r INSERT INFO HERE, warning=FALSE, message=FALSE}
+```{r INSERT INFO HERE4, warning=FALSE, message=FALSE}
 #CODE CHUNK 2 HERE
 
 ```
@@ -180,8 +193,7 @@ Section created by Grace Randall
 ---
 
 
-## Data Visualization & Plots
-Section created by Katie Tack
+## Data Visualization & Plots:
 
 ### Custom Theme for Plots
 
@@ -207,7 +219,7 @@ custom.theme <- function() {
 
 ---
 
-### Group Size
+### Group Size Scatter Plots
 
 ```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
 #scatter plot of group size and time of day
@@ -225,12 +237,11 @@ deer.timeofday <-
 print(deer.timeofday)
 ```
 
-```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
+```{r Group Size & Moon Phase, warning=FALSE, message=FALSE}
 #scatter plot of group size and time of day
 deer.moonphase <- 
   ggplot(deer_cam_data, aes(x = moon_phase, y = group_size)) +
   geom_point() +
-  geom_smooth(method = lm, color="black") +
   labs(
     title = "Group Size of Deer Seen on Camera Based on Moon Phase",
     x = "Moon Phase",
@@ -242,6 +253,11 @@ deer.moonphase <-
 
 print(deer.moonphase)
 ```
+
+
+---
+
+### Time of Day Scatter Plots
 
 ```{r Moon Phase & Time of Day, warning=FALSE, message=FALSE}
 #scatter plot of group size and time of day
@@ -260,15 +276,70 @@ print(deer.moonphase.time)
 ```
 
 
-```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
+```{r Month & Time of Day, warning=FALSE, message=FALSE}
 #scatter plot of group size and time of day
 deer.time.month <- 
-  ggplot(deer_cam_data, aes(x = time_category, y = group_size, color = month, group = month)) +
+  ggplot(deer_cam_data, aes(x = start_date, y = start_time, color = group_size)) +
+  geom_point() +
+  geom_smooth(method = lm, color="black") +
+  labs(
+    title = "Deer Seen on Camera Based on Month & Time of Day",
+    x = "Month",
+    y = "Time of Day (hour)",
+    color = "Group Size"
+  ) +
+  custom.theme()
+
+print(deer.time.month)
+```
+
+
+---
+
+### Heatmaps
+
+```{r Month & Time of Day Heatmap, warning=FALSE, message=FALSE}
+deer.month.time.heatmap <- 
+  ggplot(deer_cam_data, aes(x = moon_phase, y = start_time, fill = group_size)) +
+  geom_tile() +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(
+    title = "Heatmap of Moon Phase & Time of Day, by Group Size",
+    x = "Moon Phase",
+    y = "Time of Day (hour)",
+    color = "Group Size"
+  ) +
+  custom.theme()
+
+print(deer.month.time.heatmap)
+```
+```{r Cam ID & Time of Day Heatmap, warning=FALSE, message=FALSE}
+deer.cam.time.heatmap <- 
+  ggplot(deer_cam_data, aes(x = start_time, y = cam_id, fill = group_size)) +
+  geom_tile() +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(
+    title = "Heatmap of Time of Day & Camera ID, by Group Size",
+    x = "Time of Day (hour)",
+    y = "Camera ID",
+    color = "Group Size"
+  ) +
+  scale_x_continuous(breaks = seq(min(deer_cam_data$start_time), max(deer_cam_data$start_time), by = 2)) +
+  scale_y_continuous(breaks = seq(min(deer_cam_data$cam_id), max(deer_cam_data$cam_id), by = 5)) +
+  custom.theme()
+
+print(deer.cam.time.heatmap)
+```
+
+```{r Cam ID & Time of Day Heatmap, warning=FALSE, message=FALSE}
+deer.time.month <- 
+  ggplot(deer_cam_data, aes(x = start_date, y = division, color = moon_phase)) +
   geom_point() +
   labs(
-    title = "Deer Seen on Camera Based on Moon Phase and Time of Day",
-    x = "Moon Phase",
-    y = "Time of Day (hour)"
+    title = "Deer Seen on Camera Based on Month & Time of Day",
+    x = "Month",
+    y = "Division",
+    color = "Time of Day (hour)"
   ) +
   custom.theme()
 
