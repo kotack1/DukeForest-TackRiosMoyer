@@ -49,8 +49,8 @@ here()
 
 ```{r Read in Files, warning=FALSE, message=FALSE}
 #read excel file 
-trailcam_csv <- read.csv(here("sequences.csv"))
-moon_phases_csv <- read.csv(here("moon_phases.csv"))
+trailcam_csv <- read.csv(here("Data", "Raw", "sequences.csv"))
+moon_phases_csv <- read.csv(here("Data", "Raw", "moon_phases.csv"))
 ```
 
 ---
