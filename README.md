@@ -15,19 +15,19 @@
 ## Investigators
 
 **Katie Tack**
-> Master of Environmental Management Canidate, Duke University '25
+> Master of Environmental Management Canidate, Duke University '25  
 > katie.tack@duke.edu
 
 **Alejandra Rios**
-> Master of Environmental Management Canidate, Duke University '25
+> Master of Environmental Management Canidate, Duke University '25  
 > alejandra.rios@duke.edu
 
 **Grace Randall**
-> Master of Environmental Management Canidate, Duke University '25
+> Master of Environmental Management Canidate, Duke University '25  
 > grace.randall@duke.edu
 
 **Sophie Moyer**
-> Master of Environmental Management Canidate, Duke University '25
+> Master of Environmental Management Canidate, Duke University '25  
 > sophie.moyer@duke.edu
 
 ## Keywords
