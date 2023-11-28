@@ -3,7 +3,6 @@
 ## Summary
 
 **Repository Summary**
-
 This repository was created to house the final Environmental Data Analysis project for Katie Tack, Ale Rios, Grace Randall, and Sophie Moyer. Their project focuses on white-tailed deer in the Duke Forest (Durham, Blackwood, and Korstian divisions)
 
 **Data Collection**  
