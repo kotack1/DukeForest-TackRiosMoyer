@@ -13,19 +13,19 @@ The analysis goals of this project are to determine the movements of white-taile
 
 ## Investigators
 
-**Katie Tack**
+**Katie Tack**  
 Master of Environmental Management Canidate, Duke University '25  
 katie.tack@duke.edu
 
-**Alejandra Rios**
+**Alejandra Rios**  
 Master of Environmental Management Canidate, Duke University '25  
 alejandra.rios@duke.edu
 
-**Grace Randall**
+**Grace Randall**  
 Master of Environmental Management Canidate, Duke University '25  
 grace.randall@duke.edu
 
-**Sophie Moyer**
+**Sophie Moyer**  
 Master of Environmental Management Canidate, Duke University '25  
 sophie.moyer@duke.edu
 
