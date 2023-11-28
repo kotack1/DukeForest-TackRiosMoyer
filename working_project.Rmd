@@ -1,5 +1,6 @@
 ---
 title: "Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera Traps"
+subtitle: "How does time of day and moon phase affect the movement of deer herds in the Duke Forest?"
 author: "Sophie Moyer, Grace Randall, Ale Rios, Katie Tack"
 date: "`r Sys.Date()`"
 output:
@@ -208,6 +209,7 @@ custom.theme <- function() {
     axis.text = element_text(size = 10, color = "salmon3", angle = 10),
     axis.title = element_text(size = 12, face = "bold", color = "salmon4"),
     plot.title = element_text(size = 16, color = "black", face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, color = "gray", hjust = 0.5),
     legend.text = element_text(size = 10, color = "salmon3"),
     legend.title = element_text(size = 12, color = "salmon4", face = "bold"),
     legend.position = "right"
@@ -219,31 +221,31 @@ custom.theme <- function() {
 
 ---
 
-### Group Size Scatter Plots
+### Herd Size Scatter Plots
 
-```{r Group Size & Time of Day, warning=FALSE, message=FALSE}
-#scatter plot of group size and time of day
-deer.timeofday <- 
+```{r Herd Size & Time of Day - Scatter, warning=FALSE, message=FALSE}
+#scatter plot of herd size and time of day
+scatter.deer.time.herd <- 
   ggplot(deer_cam_data, aes(x = start_time, y = group_size)) +
   geom_point() +
   geom_smooth(method = lm, color="black") +
   labs(
-    title = "Group Size of Deer Seen on Camera Based on Time of Day",
+    title = "Herd Size Observed Based on Time of Day",
     x = "Time of Day (hour)",
-    y = "Group Size"
+    y = "Herd Size"
   ) +
   custom.theme()
 
-print(deer.timeofday)
+print(scatter.deer.time.herd)
 ```
 
-```{r Group Size & Moon Phase, warning=FALSE, message=FALSE}
-#scatter plot of group size and time of day
-deer.moonphase <- 
+```{r Herd Size & Moon Phase - Scatter, warning=FALSE, message=FALSE}
+#scatter plot of herd size and moon phase
+scatter.deer.moon.herd <- 
   ggplot(deer_cam_data, aes(x = moon_phase, y = group_size)) +
   geom_point() +
   labs(
-    title = "Group Size of Deer Seen on Camera Based on Moon Phase",
+    title = "Herd Size Observed Based on Moon Phase",
     x = "Moon Phase",
     y = "Group Size"
   ) +
@@ -251,7 +253,7 @@ deer.moonphase <-
   scale_y_continuous(breaks = seq(0, ceiling(max(deer_cam_data$group_size)), by = 1)) +
   custom.theme()
 
-print(deer.moonphase)
+print(scatter.deer.moon.herd)
 ```
 
 
@@ -259,38 +261,55 @@ print(deer.moonphase)
 
 ### Time of Day Scatter Plots
 
-```{r Moon Phase & Time of Day, warning=FALSE, message=FALSE}
-#scatter plot of group size and time of day
-deer.moonphase.time <- 
+```{r Moon Phase & Time of Day - Scatter, warning=FALSE, message=FALSE}
+#scatter plot of moon phase and time of day
+scatter.deer.moon.time <- 
   ggplot(deer_cam_data, aes(x = moon_phase, y = start_time)) +
   geom_point() +
   geom_smooth(method = lm, color="black") +
   labs(
-    title = "Deer Seen on Camera Based on Moon Phase and Time of Day",
+    title = "Deer Observed Based on Moon Phase & Time of Day",
     x = "Moon Phase",
     y = "Time of Day (hour)"
   ) +
   custom.theme()
 
-print(deer.moonphase.time)
+print(scatter.deer.moon.time)
 ```
 
 
-```{r Month & Time of Day, warning=FALSE, message=FALSE}
-#scatter plot of group size and time of day
-deer.time.month <- 
+```{r Month & Time of Day - Scatter, warning=FALSE, message=FALSE}
+#scatter plot of month and time of day, sorted by herd size
+scatter.deer.time.month <- 
   ggplot(deer_cam_data, aes(x = start_date, y = start_time, color = group_size)) +
   geom_point() +
   geom_smooth(method = lm, color="black") +
   labs(
-    title = "Deer Seen on Camera Based on Month & Time of Day",
+    title = "Deer Observed Based on Month & Time of Day",
+    subtitle = "Categorized by Herd Size",
     x = "Month",
     y = "Time of Day (hour)",
-    color = "Group Size"
+    color = "Herd Size"
   ) +
   custom.theme()
 
-print(deer.time.month)
+print(scatter.deer.time.month)
+```
+
+```{r Month & Moon Phase - Scatter, warning=FALSE, message=FALSE}
+scatter.deer.time.day.moon <- 
+  ggplot(deer_cam_data, aes(x = start_date, y = moon_type, color = time_category)) +
+  geom_point() +
+  labs(
+    title = "Deer Observed Based on Month & Moon Phase",
+    subtitle = "Categorized by Time of Day",
+    x = "Month by Date",
+    y = "Moon Phase (type)",
+    color = "Time of Day (type)"
+  ) +
+  custom.theme()
+
+print(scatter.deer.time.day.moon)
 ```
 
 
@@ -298,52 +317,39 @@ print(deer.time.month)
 
 ### Heatmaps
 
-```{r Month & Time of Day Heatmap, warning=FALSE, message=FALSE}
-deer.month.time.heatmap <- 
+```{r Moon Phase & Time of Day - Heatmap, warning=FALSE, message=FALSE}
+deer.moon.time.heatmap <- 
   ggplot(deer_cam_data, aes(x = moon_phase, y = start_time, fill = group_size)) +
   geom_tile() +
   scale_fill_gradient(low = "yellow", high = "red") +
   labs(
-    title = "Heatmap of Moon Phase & Time of Day, by Group Size",
+    title = "Deer Observed Based on Moon Phase & Time of Day",
+    subtitle = "Characterized by Herd Size",
     x = "Moon Phase",
     y = "Time of Day (hour)",
-    color = "Group Size"
+    fill = "Herd Size"
   ) +
   custom.theme()
 
-print(deer.month.time.heatmap)
+print(deer.moon.time.heatmap)
 ```
-```{r Cam ID & Time of Day Heatmap, warning=FALSE, message=FALSE}
+```{r Camera ID & Time of Day - Heatmap, warning=FALSE, message=FALSE}
 deer.cam.time.heatmap <- 
   ggplot(deer_cam_data, aes(x = start_time, y = cam_id, fill = group_size)) +
   geom_tile() +
   scale_fill_gradient(low = "yellow", high = "red") +
   labs(
-    title = "Heatmap of Time of Day & Camera ID, by Group Size",
+    title = "Deer Observed Based on Time of Day & Camera",
+    subtitle = "Characterized by Herd Size",
     x = "Time of Day (hour)",
     y = "Camera ID",
-    color = "Group Size"
+    fill = "Herd Size"
   ) +
   scale_x_continuous(breaks = seq(min(deer_cam_data$start_time), max(deer_cam_data$start_time), by = 2)) +
   scale_y_continuous(breaks = seq(min(deer_cam_data$cam_id), max(deer_cam_data$cam_id), by = 5)) +
   custom.theme()
 
 print(deer.cam.time.heatmap)
-```
-
-```{r Cam ID & Time of Day Heatmap, warning=FALSE, message=FALSE}
-deer.time.month <- 
-  ggplot(deer_cam_data, aes(x = start_date, y = division, color = moon_phase)) +
-  geom_point() +
-  labs(
-    title = "Deer Seen on Camera Based on Month & Time of Day",
-    x = "Month",
-    y = "Division",
-    color = "Time of Day (hour)"
-  ) +
-  custom.theme()
-
-print(deer.time.month)
 ```
 
 
