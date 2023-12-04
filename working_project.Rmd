@@ -238,6 +238,9 @@ scatter.deer.time.herd <-
 
 print(scatter.deer.time.herd)
 ```
+```{r Phases of the Moon, warning=FALSE, message=FALSE}
+knitr::include_graphics(here("Images", "moon_phases.png"))
+```
 
 ```{r Herd Size & Moon Phase - Scatter, warning=FALSE, message=FALSE}
 #scatter plot of herd size and moon phase
