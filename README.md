@@ -2,22 +2,48 @@
 
 ## Summary
 
-<describe the purpose of this repository, the information it contains, and any relevant analysis goals. What, why, where, when, how?>
-
+**Repository Summary**  
 This repository was created to house the final Environmental Data Analysis project for Katie Tack, Ale Rios, Grace Randall, and Sophie Moyer. Their project focuses on white-tailed deer in the Duke Forest (Durham, Blackwood, and Korstian divisions)
-The data was collected through the lab of Dr. Sarah Roberts, whose team (including Katie Tack) placed camera traps along known migration paths. The information collected includes common_name, deployment_id, start_date, start_time, end_date, end_time, cam_id, and group_size. There is another file that contains the longitude and latitude for each camera (deployment_id). 
+
+**Data Collection**  
+The data was collected through the lab of Dr. Sarah Roberts, whose team (including Katie Tack) placed camera traps along known migration paths. The information collected includes common_name, deployment_id, start_date, start_time, end_date, end_time, cam_id, and group_size. There is another file that contains the longitude and latitude for each camera (deployment_id).
+
+**Project Goals**  
 The analysis goals of this project are to determine the movements of white-tailed deer in the Duke Forest based on time of day and moon phase.
 
 ## Investigators
 
-Katie Tack, Duke Master of Environmental Management Canidate, katie.tack@duke.edu;
-Ale Rios, Duke Master of Environmental Management Canidate, alejandra.rios@duke.edu;
-Grand Randall, Duke Master of Environmental Management Canidate, grace.randall@duke.edu;
-Sophie Moyer, Duke Master of Environmental Management Canidate, sophie.moyer@duke.edu;
+**Katie Tack**  
+Master of Environmental Management Canidate, Duke University '25  
+katie.tack@duke.edu
+
+**Alejandra Rios**  
+Master of Environmental Management Canidate, Duke University '25  
+alejandra.rios@duke.edu
+
+**Grace Randall**  
+Master of Environmental Management Canidate, Duke University '25  
+grace.randall@duke.edu
+
+**Sophie Moyer**  
+Master of Environmental Management Canidate, Duke University '25  
+sophie.moyer@duke.edu
 
 ## Keywords
-
-<add relevant keywords here>
+- Duke University
+- Duke Forest
+- Nicholas School of the Environment
+- camera traps
+- white-tailed deer
+- moon phases
+- trail camera survey
+- deer migration
+- deer management
+- deer migration
+- Durham
+- Blackwood
+- Korstian
+- deer population
 
 ## Database Information
 
