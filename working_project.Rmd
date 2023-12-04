@@ -23,6 +23,12 @@ To conduct a deer survey with trail cameras, one camera must be placed every 160
 The Duke forest is 7,000 acres.(Source: Duke University. (n.d.). Duke Forest – Teaching and Research Laboratory. Retrieved from https://dukeforest.duke.edu)
 There are 30 trail cameras in the Duke forest along known migration paths.
 
+```{r warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
+library(here)
+here() #get working directory
+knitr::include_graphics(here("Images", "buck_day.jpg"))
+```
+
 ## Setup & Data Wrangling:
 
 ### Importing Packages & Files
@@ -32,7 +38,6 @@ There are 30 trail cameras in the Duke forest along known migration paths.
 library(tidyverse)
 library(lubridate)
 library(viridis)
-library(here)
 library(rvest);
 library(dataRetrieval)
 library(dplyr)
@@ -43,10 +48,6 @@ library(mapview); mapviewOptions(fgb = FALSE)
 library(RColorBrewer)
 ```
 
-```{r Get Working Directory, warning=FALSE, message=FALSE}
-#get working directory
-here()
-```
 
 ```{r Read in Files, warning=FALSE, message=FALSE}
 #read excel file 
@@ -199,7 +200,7 @@ deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phas
 ### Custom Theme for Plots
 
 ```{r Custom Theme, warning=FALSE, message=FALSE}
-#custom theme to use for future plots
+#custom theme to use for plots
 custom.theme <- function() {
   theme_minimal() + 
   theme(
@@ -238,12 +239,11 @@ scatter.deer.time.herd <-
 
 print(scatter.deer.time.herd)
 ```
-```{r Phases of the Moon, warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
-knitr::include_graphics(here("Images", "moon_phases.png"))
-
-```
 
 ```{r Herd Size & Moon Phase - Scatter, warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
+#insert image of phases of the moon for reference purposes
+knitr::include_graphics(here("Images", "moon_phases.png"))
+
 #scatter plot of herd size and moon phase
 scatter.deer.moon.herd <- 
   ggplot(deer_cam_data, aes(x = moon_phase, y = group_size)) +
@@ -256,6 +256,8 @@ scatter.deer.moon.herd <-
   scale_x_discrete(labels = c("new moon", "waxing crescent", "first quarter", "waxing gibbous", "full moon", "waning gibbous", "third quarter", "waning crescent")) +
   scale_y_continuous(breaks = seq(0, ceiling(max(deer_cam_data$group_size)), by = 1)) +
   custom.theme()
+
+#scale_x_discrete to get labels in order that I want them to be
 
 print(scatter.deer.moon.herd)
 ```
