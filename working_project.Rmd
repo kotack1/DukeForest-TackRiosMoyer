@@ -14,8 +14,22 @@ The data used in this project is of animal sightings on the trail cameras around
 
 ## Hypotheses: 
 
-1. We aim to determine how time of day and moon phases affect the movement of the deer population in the Duke Forest.
-1. We aim to measure which areas of the forest were most frequented relative to development. (Source: Oleniacz, L. (2022, October 27). Scientists track triangle deer to learn how they deal with development. NC State University. Retrieved from https://news.ncsu.edu/2022/10/scientists-track-triangle-deer-to-learn-how-they-deal-with-development/)
+1. Hypothesis 1:
+    - H0: The time of day does not have an impact on observed deer
+    - Ha: The time of day being dawn/dusk results in an increase of observed deer
+
+2. Hypothesis 2:
+    - H0: Development has no impact on observed deer
+    - Ha: An increase in development results in a decrease of observed deer
+    
+3. Hypothesis 3:
+    - H0: The phase of the moon has no impact on observed deer
+    - Ha: The moon being full/gibbous results in an increase of observed deer
+
+4. Hypothesis 4:
+    - H0: The phase of the moon has no effect on the time of day deer are observed
+    - Ha: The moon being full/gibbous results in an increase of observed deer at dawn/dusk
+
 
 ## Background: 
 
