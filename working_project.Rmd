@@ -229,7 +229,7 @@ custom.theme <- function() {
 scatter.deer.time.herd <- 
   ggplot(deer_cam_data, aes(x = start_time, y = group_size)) +
   geom_point() +
-  geom_smooth(method = lm, color="black") +
+  geom_smooth(method = loess, color="black") +
   labs(
     title = "Herd Size Observed Based on Time of Day",
     x = "Time of Day (hour)",
