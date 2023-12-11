@@ -6,14 +6,13 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
+    fig_caption: yes
 ---
-\newpage
-\tableofcontents 
-\newpage
-\listoftables 
-\newpage
-\listoffigures 
-\newpage
+
+# List of Figures
+ - [Figure 1: Herd Size & Time of Day](#fig1)
+ - [Figure 2: Herd Size & Moon Phase]
+
 
 ```{r setup, include=FALSE, warning=FALSE, message=FALSE}
 # Set your working directory
@@ -186,7 +185,7 @@ deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phas
 
 ### Herd Size Scatter Plots
 
-```{r Herd Size & Time of Day - Scatter, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
+```{r fig1, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%', fig.cap='Figure 1: Herd Size & Time of Day'}
 #scatter plot of herd size and time of day
 scatter.deer.time.herd <- 
   ggplot(deer_cam_data, aes(x = start_time, y = group_size)) +
@@ -205,7 +204,7 @@ print(scatter.deer.time.herd)
 
 
 
-```{r Herd Size & Moon Phase - Scatter, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
+```{r fig2, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%', fig.cap='Figure 2: Herd Size & Moon Phase'}
 #insert image of phases of the moon for reference purposes
 knitr::include_graphics(here("Images", "moon_phases.png"))
 
