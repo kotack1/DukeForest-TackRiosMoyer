@@ -169,8 +169,8 @@ categorize_moon_phase <- function(phase) {
 deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phase)
 
 #read Duke forest boundary shapefile into project
-#("Duke University/Documents/EDE_Fall2023/DukeForest-TackRiosMoyer/duke-forest-spatial-data/duke-forest-spatial-data/Boundary")
-#forest_sf <- st_read("Duke_Forest_Boundary_Mar2022.shp")
+forest_path <- "Duke_Forest_Boundary_Mar2022.shp"
+forest_sf <- st_read(forest_path)
 #mapview(forest_sf)
 
 #convert coordinates to a spatial dataframe
