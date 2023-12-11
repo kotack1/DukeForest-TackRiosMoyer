@@ -1,0 +1,131 @@
+---
+title: "White Tail Deer Movement with Moon Phases"
+subtitle: "How does time of day and moon phase affect the movement of deer herds in the Duke Forest?"
+author: "Sophie Moyer, Grace Randall, Alejandra Rios, Katie Tack"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+---
+\newpage
+\tableofcontents 
+\newpage
+\listoftables 
+\newpage
+\listoffigures 
+\newpage
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+# Set your working directory
+library(here)
+here()
+
+# Load your packages
+library(tidyverse)
+library(lubridate)
+library(viridis)
+library(rvest);
+library(dataRetrieval)
+library(dplyr)
+library(readr)
+library(stringr)
+library(sf); 
+library(mapview); mapviewOptions(fgb = FALSE)
+library(RColorBrewer)
+library(rmarkdown)
+
+# Set your ggplot theme
+custom.theme <- function() {
+  theme_minimal() + 
+  theme(
+    panel.background = element_rect(fill = "seashell"),
+    panel.grid.major = element_line(colour = "bisque2", linetype = "dashed"),
+    axis.line = element_line(colour = "black", size = 0.5),
+    axis.text = element_text(size = 10, color = "salmon3", angle = 10),
+    axis.title = element_text(size = 12, face = "bold", color = "salmon4"),
+    plot.title = element_text(size = 16, color = "black", face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, color = "gray", hjust = 0.5),
+    legend.text = element_text(size = 10, color = "salmon3"),
+    legend.title = element_text(size = 12, color = "salmon4", face = "bold"),
+    legend.position = "right"
+  )
+}
+
+# Load your datasets
+trailcam_csv <- read.csv(here("Data", "Raw", "sequences.csv"))
+moon_phases_csv <- read.csv(here("Data", "Raw", "moon_phases.csv"))
+
+```
+
+
+# Rationale and Research Questions
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
+knitr::include_graphics(here("Images", "buck_day.jpg"))
+```
+
+Hypothesis:
+
+This research focused on the intricate dynamics of white-tailed deer movements within Duke Forest, particularly in relation to the time of day and the position of the moon. The objective was to ascertain the impact of these environmental factors on the spatial behavior of deer populations. Additionally, the study aimed to measure the frequency of deer visits to various areas of the forest, with a specific emphasis on understanding how these patterns correlate with nearby developmental activities. This approach provided valuable insights into the adaptability and movement patterns of white-tailed deer in response to anthropogenic changes in their habitat. The methodology and findings of this study offer a significant contribution to the understanding of wildlife ecology, particularly in areas experiencing urban development (Oleniacz).
+
+1. Hypothesis 1:
+    - H0: The time of day does not have an impact on observed deer
+    - Ha: The time of day being dawn/dusk results in an increase of observed deer
+
+2. Hypothesis 2:
+    - H0: Development has no impact on observed deer
+    - Ha: An increase in development results in a decrease of observed deer
+    
+3. Hypothesis 3:
+    - H0: The phase of the moon has no impact on observed deer
+    - Ha: The moon being full/gibbous results in an increase of observed deer
+
+4. Hypothesis 4:
+    - H0: The phase of the moon has no effect on the time of day deer are observed
+    - Ha: The moon being full/gibbous results in an increase of observed deer at dawn/dusk
+
+
+
+\newpage
+
+# Dataset Information
+
+In this study, data collection was facilitated through the utilization of trail cameras strategically positioned within Duke Forest, a 7,000-acre research and teaching laboratory managed by Duke University (Duke University, n.d.). Under the guidance of Dr. Roberts' laboratory, known for its expertise in monitoring deer populations and their movements, a total of 50 cameras were deployed along established migration routes within the forest. These cameras were programmed to capture a sequence of ten images over a span of ten seconds whenever motion was detected, continuing this process until no further movement was observed. 
+
+Following the retrieval of the cameras, the collected data was uploaded to Wildlife Insights, a platform that leverages artificial intelligence to initially categorize the species captured in the images. To ensure the accuracy of species identification, manual verification and correction by trained personnel were subsequently carried out, amending any misclassifications as necessary. This methodological approach provided a comprehensive and accurate assessment of the wildlife within Duke Forest.
+
+The data set was chosen due to Katie Tack's position as an assistant to Dr. Sarah Roberts. It is not yet publicly available and was given to our team directly by Dr. Roberts.
+
+
+\newpage
+
+# Exploratory Analysis 
+
+
+
+\newpage
+
+# Analysis
+
+
+
+## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+
+## Question 2: 
+
+
+
+
+\newpage
+
+# Summary and Conclusions
+
+
+\newpage
+
+# References
+
+Duke University. (n.d.). Duke Forest – Teaching and Research Laboratory. Retrieved from https://dukeforest.duke.edu
+
+Oleniacz, L. (2022, October 27). Scientists track triangle deer to learn how they deal with development. NC State University. Retrieved from https://news.ncsu.edu/2022/10/scientists-track-triangle-deer-to-learn-how-they-deal-with-development/
+
