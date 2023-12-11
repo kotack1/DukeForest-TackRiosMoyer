@@ -54,6 +54,7 @@ custom.theme <- function() {
 # Load your datasets
 trailcam_csv <- read.csv(here("Data", "Raw", "sequences.csv"))
 moon_phases_csv <- read.csv(here("Data", "Raw", "moon_phases.csv"))
+cam_coords <- read.csv(here("Data", "Raw", "camera_coords.csv"))
 
 ```
 
@@ -95,6 +96,55 @@ In this study, data collection was facilitated through the utilization of trail 
 Following the retrieval of the cameras, the collected data was uploaded to Wildlife Insights, a platform that leverages artificial intelligence to initially categorize the species captured in the images. To ensure the accuracy of species identification, manual verification and correction by trained personnel were subsequently carried out, amending any misclassifications as necessary. This methodological approach provided a comprehensive and accurate assessment of the wildlife within Duke Forest.
 
 The data set was chosen due to Katie Tack's position as an assistant to Dr. Sarah Roberts. It is not yet publicly available and was given to our team directly by Dr. Roberts.
+
+
+\newpage
+
+# Data Wrangling
+
+In this study, a meticulous data wrangling process was employed to refine and optimize the dataset for analysis. Initially, the data underwent a mutation process, wherein superfluous information was systematically filtered out, ensuring that only pertinent data elements were retained. This step was crucial for enhancing the quality and relevance of the dataset, thereby facilitating more accurate and focused analyses. Following this, the streamlined data was strategically merged with an additional dataset containing geographic coordinates. This integration was instrumental in enriching the dataset with spatial context, allowing for more comprehensive and nuanced interpretations of the data, particularly in analyses that required geographic or locational insights. The combination of these data wrangling techniques significantly improved the dataset’s utility for the research objectives, demonstrating the importance of effective data management in the extraction of meaningful insights from complex datasets.
+
+```{r Data Wrangling, include=FALSE, warning=FALSE, message=FALSE}
+
+#date as objects
+trailcam_csv$start_time <- ymd_hms(trailcam_csv$start_time)
+trailcam_csv$end_time <- ymd_hms(trailcam_csv$end_time)
+
+#separate date and time
+trailcam_csv$start_date <- as.Date(trailcam_csv$start_time)
+trailcam_csv$start_time <- format(trailcam_csv$start_time, "%H:%M:%S")
+
+trailcam_csv$end_date <- as.Date(trailcam_csv$end_time)  
+trailcam_csv$end_time <- format(trailcam_csv$end_time, "%H:%M:%S") 
+
+#filter for white- tailed deer, select relevant columns, and isolate trail camera id number.
+deer_data <- trailcam_csv %>%
+  filter(common_name == "White-tailed Deer") %>%
+  select(common_name, deployment_id, start_date, start_time, end_date, end_time, group_size) %>%
+  mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+")))
+#cam_id refers to the camera id number
+#mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+"))) taken from stackoverflow
+
+#read file with trail camera coordinates (delivered as a .xlsx and converted to a .csv)
+cam_coords <- read.csv(here("camera_coords.csv"))
+
+#Select id number and coordinates
+cam_coordinates <- cam_coords %>%
+  mutate(cam_id = as.numeric(str_extract(deployment_id, "\\d+")))
+
+#join deer data with trail camera coordinate data to find where cameras are, and clean up data
+deer_cam_data <- left_join(deer_data, cam_coordinates, by = "cam_id") %>%
+  select(common_name, start_date, start_time, end_date, end_time, group_size, cam_id, longitude, latitude)
+
+#read Duke forest boundary shapefile into project
+here("Duke University/Documents/EDE_Fall2023/DukeForest-TackRiosMoyer/duke-forest-spatial-data/duke-forest-spatial-data/Boundary")
+forest_sf <- st_read("Duke_Forest_Boundary_Mar2022.shp")
+mapview(forest_sf)
+
+#convert coordinates to a spatial dataframe
+deer_cam_data_sf <- deer_cam_data_sf %>% st_as_sf(coords = c("Longtitude","Latitude"), crs=4326)
+```
+
 
 
 \newpage
