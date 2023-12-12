@@ -205,44 +205,22 @@ deer_data <- inner_join(deer_data, moon_phases_csv, by = "start_date")
 
 ## Statistical Tests & Machine Learning:
 
-<<<<<<< HEAD
-
 ### Understanding the Data
 
 ```{r Visual Plot, warning=FALSE, message=FALSE}
 deer_data <- deer_data %>%
   arrange(month, start_time)
 
-=======
-### Understanding the Data
-
-```{r Visual Plot, warning=FALSE, message=FALSE}
-deer_data <- deer_data %>%
-  arrange(month, start_time)
-
->>>>>>> 47c4d6b02bdb2d4340be84f3894222ea4ab030d5
-# Calculate sum of sightings by month and hour
 deer_hours <- deer_data %>%
   group_by(month, start_time, month_name) %>%
   mutate(sightings = 1, .groups = 'drop') %>% 
   summarise(sightings = sum(sightings), .groups = 'drop')
 
-# Create a line plot using ggplot2
-<<<<<<< HEAD
-sightings <- ggplot(deer_hours, aes(x = start_time, y = sightings, group = month, color = as.factor(month_name))) +
-  geom_line() +
-  labs(title = "Deer Sightings", x = "Hour",  y = "Sightings") +
-  scale_color_discrete(name = "Month") + custom.theme() + facet_wrap(~ month_name, ncol = 1)
-
-sightings
-=======
 ggplot(deer_hours, aes(x = start_time, y = sightings, group = month, color = as.factor(month_name))) +
   geom_line() +
   labs(title = "Deer Sightings", x = "Hour",  y = "Sightings") +
   scale_color_discrete(name = "Month") + custom.theme() + facet_wrap(~ month_name, ncol = 1)
->>>>>>> 47c4d6b02bdb2d4340be84f3894222ea4ab030d5
 ```
-
 
 The graphical representation delineates discernible peaks in deer sightings throughout the day, with particular emphasis on a notable surge in April during both the early morning and evening hours. This graphical depiction aligns with our initial hypothesis, posited as follows: *"The time of day has no discernible effect on deer observations."*
 
@@ -262,42 +240,9 @@ Kjellander, P., & Nordstrom, J. (2003). Cyclic voles, prey switching in red fox,
 
 ---
 
-<<<<<<< HEAD
 **Methods**
 
 In light of the available dataset, our analytical approach involves the application of analysis of variance (ANOVA) tests to assess the implications posited by hypotheses one and three. The underlying premise is to ascertain the absence of any discernible relationship between these variables, signifying an absence of influence from temporal and lunar factors on deer behavior. ANOVA is selected as the preferred statistical method for this investigation due to its efficacy in evaluating relationships between quantitative and categorical variables. In our specific context, group size is treated as a quantitative variable, while time of day (TOD) and moon phase are both considered categorical.
-=======
-### ANOVA Tests
-
-```{r ANOVA, warning=FALSE, message=FALSE}
-#testing hypothesis one - time of day has no effect on deer observations
-time.one.way <- aov(group_size ~ TOD, data = deer_data)
-summary(time.one.way)
-
-#testing hypothesis three - moon phase has no impact on deer observations
-moon.one.way <- aov(group_size ~ moon_phase, data = deer_data)
-summary(moon.one.way)
-#small F-value and large p-value so there is little to suggest that the moon phase influences deer observations
-
-#moon and time test
-moon.and.time <- aov(group_size ~ TOD + moon_phase, data = deer_data)
-summary(moon.and.time)
-#no significance found
-
-#interaction test
-moon.time <- aov(group_size ~ TOD*moon_phase, data = deer_data)
-summary(moon.time)
-#The results indicate a statistically significant main effect of TOD on the response variable. However, there is no significant main effect of moon_phase and no significant interaction effect between TOD and moon_phase. 
-
-#maybe the division locations are adding a block?
-moon.time.block <- aov(group_size ~ TOD*moon_phase + division, data = deer_data)
-summary(moon.time.block)
-#low sum of squares and high p means the block is adding little information to our analysis - not relevant
->>>>>>> 47c4d6b02bdb2d4340be84f3894222ea4ab030d5
-
-Concurrently, hypothesis four is subjected to scrutiny via a chi-squared means test. This choice is informed by the categorical nature of the variables under consideration. The data collection methodology, wherein the camera exclusively records instances of deer presence, allows us to interpret the recorded time (TOD) as indicative of deer sightings. Consequently, in probing the potential influence of moon phase on the temporal patterns of deer sightings, we aptly employ the variables TOD and moon_phase.
-
-This methodological selection aligns with the distinct nature of the variables being examined, contributing to the robustness of our analytical framework. The rationale behind each statistical test is deliberately tailored to the specific characteristics of the data, thereby ensuring a comprehensive and contextually relevant analysis of the posed hypotheses.
 
 ### Analysis - ANOVA and Chi Square Tests
 
@@ -344,84 +289,13 @@ tukeytable %>% kbl(caption = "Tukey Multiple Comparison of Means") %>% kable_pap
 
 plot(tukey.one.way, las = 1)
 ```
-The one-way ANOVA (Analysis of Variance) results **suggest that there is a statistically significant difference among the means of the groups defined by the variable `TOD` (Time of Day).** Here's how to interpret the output:
-
-<<<<<<< HEAD
-The Tukey HSD test **suggests that the `group_size` differs significantly between night and morning, while there is no significant difference between morning and day or night and day.** Keep in mind that the interpretation of p-values depends on the chosen significance level (commonly 0.05), and adjustments may be made for multiple comparisons.
-=======
-1. **Df (Degrees of Freedom):** This indicates the degrees of freedom associated with the groups and residuals.
-   - For `TOD`: 2 degrees of freedom.
-   - For `Residuals`: 800 degrees of freedom.
-
-2. **Sum Sq (Sum of Squares):** This is a measure of the total variability in the data.
-   - For `TOD`: 3.7
-   - For `Residuals`: 379.4
-
-3. **Mean Sq (Mean Sum of Squares):** This is obtained by dividing the Sum of Squares by its corresponding degrees of freedom.
-   - For `TOD`: 1.8634
-   - For `Residuals`: 0.4742
-
-4. **F value (F-statistic):** This is the ratio of the variance among group means to the variance within the groups. It is calculated as the Mean Square for `TOD` divided by the Mean Square for `Residuals`.
-   - In this case, the F value is 3.929.
-
-5. **Pr(>F) (p-value):** This is the probability of obtaining an F-statistic as extreme as, or more extreme than, the one observed in the data, assuming the null hypothesis is true.
-   - In this case, the p-value is 0.02, which is less than the commonly used significance level of 0.05.
-
-**Interpretation:**
-The p-value (Pr(>F)) is less than 0.05, indicating that there is **evidence to reject the null hypothesis.** Therefore, there is a statistically significant difference in means among the groups defined by `TOD`. However, the specific interpretation of which groups are different would require further post-hoc tests or examination of the group means.
-
-It's also worth noting that the effect size and the context of our study should be considered when interpreting the practical significance of the results.
-
-### Determining the Best ANOVA Model
-```{r Best Model}
-model.set <- list(time.one.way, moon.and.time, moon.time, moon.time.block)
-model.names <- c("one.way", "two.way", "interaction", "blocking")
-aictab(model.set, modnames = model.names)
-#based on the AIC, the one-way ANVOA test is the best model. The one.way test has 95% of the AIC weight - meaning it explains 95% of the total variation in the dependent variable (group_size)
-plot(time.one.way)
-
-tukey.one.way <- TukeyHSD(time.one.way)
-tukey.one.way
-plot(tukey.one.way, las = 1)
-```
-The results of the Tukey Honest Significant Difference (HSD) test provide insights into the pairwise differences between the levels of the `TOD` variable (Time of Day) with respect to the `group_size` variable. Let's break down the output:
-
-1. **diff:** This column represents the differences in means between the levels of `TOD`.
-
-2. **lwr and upr:** These columns indicate the lower and upper bounds of the 95% confidence interval for the differences. If this interval includes zero, the difference is not considered statistically significant.
-
-3. **p adj (adjusted p-value):** This column shows the adjusted p-values after correcting for multiple comparisons.
-
-Now, let's interpret the results for each pairwise comparison:
-
-- **morning vs. day:**
-  - Difference: 0.09096293
-  - 95% Confidence Interval: [-0.0441878, 0.22611366]
-  - p-value: 0.2547153
-  - Interpretation: The difference is not statistically significant as the confidence interval includes zero, and the p-value is greater than 0.05.
-
-- **night vs. day:**
-  - Difference: -0.07540230
-  - 95% Confidence Interval: [-0.2225017, 0.07169713]
-  - p-value: 0.4513530
-  - Interpretation: The difference is not statistically significant as the confidence interval includes zero, and the p-value is greater than 0.05.
-
-- **night vs. morning:**
-  - Difference: -0.16636523
-  - 95% Confidence Interval: [-0.3073211, -0.02540937]
-  - p-value: 0.0157434
-  - Interpretation: The difference is statistically significant as the confidence interval does not include zero, and the p-value is less than 0.05. Therefore, there is evidence to suggest a significant difference in `group_size` between night and morning.
-
 In summary, the Tukey HSD test **suggests that the `group_size` differs significantly between night and morning, while there is no significant difference between morning and day or night and day.** Keep in mind that the interpretation of p-values depends on the chosen significance level (commonly 0.05), and adjustments may be made for multiple comparisons.
----
->>>>>>> 47c4d6b02bdb2d4340be84f3894222ea4ab030d5
 
 
 **Chi-Squared Model for Moon Phases and Time of Day**
 ```{r Chi Square Model, message=FALSE, warning=FALSE}
 ggbarstats(data  = deer_data, x = moon_phase, y= TOD, label = "both")
 ```
-
 
 The presented bar plot indicates a discernible influence of moon phase, particularly during the waning gibbous phase, on the temporal patterns of deer sightings. The data collection methodology, wherein the camera recorded instances exclusively when a deer was present, enables us to consider the recorded time (TOD) as indicative of deer sightings. Notably, there is a pronounced surge in deer sightings during daylight hours when the moon is in a waning gibbous phase. While morning and night also exhibit an increase in deer sightings, the magnitude of this increase is comparatively more pronounced during the day.
 
