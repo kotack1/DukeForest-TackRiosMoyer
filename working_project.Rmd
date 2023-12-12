@@ -65,13 +65,10 @@ library(RColorBrewer)
 library(AICcmodavg)
 ##install.packages("multcompView")
 library(multcompView)
-<<<<<<< HEAD
 ##install.packages("ggstatsplot")
 library(ggstatsplot)
 #install.packages("kableExtra")
 library(kableExtra)
-=======
->>>>>>> 47c4d6b02bdb2d4340be84f3894222ea4ab030d5
 
 custom.theme <- function() {
   theme_minimal() + 
@@ -203,7 +200,7 @@ deer_data <- inner_join(deer_data, moon_phases_csv, by = "start_date")
 ---
 
 
-## Statistical Tests & Machine Learning:
+## Statistical Tests 
 
 ### Understanding the Data
 

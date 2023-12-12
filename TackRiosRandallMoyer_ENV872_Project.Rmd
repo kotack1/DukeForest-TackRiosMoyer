@@ -7,6 +7,7 @@ output:
   html_document:
     toc: true
     fig_caption: yes
+    code_folding: hide
 ---
 
 # List of Figures
@@ -33,7 +34,14 @@ library(mapview); mapviewOptions(fgb = FALSE)
 library(RColorBrewer)
 library(rmarkdown)
 library(agricolae)
-
+#install.packages("AICcmodavg")
+library(AICcmodavg)
+##install.packages("multcompView")
+library(multcompView)
+##install.packages("ggstatsplot")
+library(ggstatsplot)
+#install.packages("kableExtra")
+library(kableExtra)
 
 # Set your ggplot theme
 custom.theme <- function() {
@@ -167,13 +175,26 @@ categorize_moon_phase <- function(phase) {
 
 deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phase)
 
+#adding a new column - categorical time of day 
+deer_data <- deer_data %>% mutate(
+    TOD = case_when(
+      start_time %in% c(20, 21, 22, 23, "00", "01", "02", "03") ~ 'night ',
+      start_time %in% c("04", "05", "06", "07", "08", "09", 10, 11) ~ 'morning',
+      start_time %in% c(12, 13, 14, 15, 16, 17, 18, 19) ~ 'day',
+      TRUE ~ NA_character_
+    )
+  )
+#categorical variable for moon phase
+deer_data <- inner_join(deer_data, moon_phases_csv, by = "start_date")
+
 #read Duke forest boundary shapefile into project
-forest_path <- "Data/Raw/City_of_Durham_Boundary.shp"
-forest_sf <- st_read(forest_path)
-mapview(forest_sf)
+#forest_path <- "Data/Raw/City_of_Durham_Boundary.shp"
+#forest_sf <- st_read(forest_path)
+#mapview(forest_sf)
 
 #convert coordinates to a spatial dataframe
 #deer_cam_data_sf <- deer_cam_data_sf %>% st_as_sf(coords = c("Longtitude","Latitude"), crs=4326)
+
 
 ```
 
@@ -181,7 +202,40 @@ mapview(forest_sf)
 
 \newpage
 
-# Exploratory Analysis 
+# Exploratory Analysis
+
+### Understanding the Data
+
+```{r Visual Plot, warning=FALSE, message=FALSE}
+deer_data <- deer_data %>%
+  arrange(month, start_time)
+
+deer_hours <- deer_data %>%
+  group_by(month, start_time, month_name) %>%
+  mutate(sightings = 1, .groups = 'drop') %>% 
+  summarise(sightings = sum(sightings), .groups = 'drop')
+
+ggplot(deer_hours, aes(x = start_time, y = sightings, group = month, color = as.factor(month_name))) +
+  geom_line() +
+  labs(title = "Deer Sightings", x = "Hour",  y = "Sightings") +
+  scale_color_discrete(name = "Month") + custom.theme() + facet_wrap(~ month_name, ncol = 1)
+```
+
+The graphical representation delineates discernible peaks in deer sightings throughout the day, with particular emphasis on a notable surge in April during both the early morning and evening hours. This graphical depiction aligns with our initial hypothesis, posited as follows: *"The time of day has no discernible effect on deer observations."*
+
+
+```{r Histogram}
+h <- hist(deer_data$group_size, main = "Histogram of Deer Observations", xlab = "Group Size", xlim = c(0,7), ylim = c(0,650), col = "tan", border = "brown")
+text(h$mids,h$counts,labels=h$counts, adj=c(0.5, -0.5))
+```
+
+The observational data pertaining to deer frequency underscores a prevailing trend wherein a majority of the observed deer exhibited solitary movement. Deer may choose to move solo instead of in a herd for various ecological and behavioral reasons, as supported by scientific literature. One key study conducted by Kjellander and Nordstrom (2003) sheds light on some key factors influencing deer movement patterns, including: **Resource Acquisition and Competition**, **Territorial Behavior and Mating Strategies**, **Avoidance of Predation** and **Social Dynamics and Dispersal**.   
+
+It is important to acknowledge that the observational data utilized in this study pertains specifically to the spring of 2023. This temporal parameter bears significance as it may impact herd size, attributable to one or more of the factors elucidated earlier.
+
+**Source:**
+Kjellander, P., & Nordstrom, J. (2003). Cyclic voles, prey switching in red fox, and roe deer dynamics—a test of the alternative prey hypothesis. Oikos, 101(2), 338-344. doi:10.1034/j.1600-0706.2003.12118.x
+
 
 ### Herd Size Scatter Plots
 
@@ -225,9 +279,6 @@ scatter.deer.moon.herd <-
 
 print(scatter.deer.moon.herd)
 ```
-
-
----
 
 ### Time of Day Scatter Plots
 
@@ -283,9 +334,6 @@ scatter.deer.time.day.moon <-
 print(scatter.deer.time.day.moon)
 ```
 
-
----
-
 ### Heatmaps
 
 ```{r Moon Phase & Time of Day - Heatmap, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%'}
@@ -326,97 +374,99 @@ print(deer.cam.time.heatmap)
 ```
 
 
----
-
-
 \newpage
 
-# Analysis
-We are trying to determine if time of day has any effect on when deer are seen in the Duke Forest
-Could also run a multi-linear regression to determine if deer presence is dependent on both time of day and temperature. (Could obtain temperature data from the US Forest Service)
+###Statistical Analysis
 
-```{r Statistcal Tests, echo=FALSE, warning=FALSE, message=FALSE}
-min(deer_data$Time)
-max(deer_data$Time)
-median(deer_data$Time)
+**Methods**
+
+In light of the available dataset, our analytical approach involves the application of analysis of variance (ANOVA) tests to assess the implications posited by hypotheses one and three. The underlying premise is to ascertain the absence of any discernible relationship between these variables, signifying an absence of influence from temporal and lunar factors on deer behavior. ANOVA is selected as the preferred statistical method for this investigation due to its efficacy in evaluating relationships between quantitative and categorical variables. In our specific context, group size is treated as a quantitative variable, while time of day (TOD) and moon phase are both considered categorical.
+
+### ANOVA and Chi Square Tests
+
+**Hypothesis One - *The time of day does not have an impact on observed deer* **   
+```{r ANOVA, warning=FALSE, message=FALSE}
+#testing hypothesis one - time of day has no effect on deer observations
+time.one.way <- aov(group_size ~ TOD, data = deer_data)
+one.way.result <- summary(time.one.way)
+timeone <- as.data.frame(one.way.result[[1]])
+timeone %>% kbl(caption = "One-Way ANOVA") %>% kable_paper("hover", full_width = F)
+```
+The p-value (Pr(>F)) is less than 0.05, indicating that there is **evidence to reject the null hypothesis.** Therefore, there is a statistically significant difference in means among the groups defined by `TOD`. However, the specific interpretation of which groups are different would require further post-hoc tests or examination of the group means.
 
 
-deer_data <- deer_data %>% mutate(Date = start_date) %>% arrange(Date)
-deer_data <- deer_data %>% mutate(Time = start_time) %>% arrange(Time)
+**Hypothesis Three - *The phase of the moon has no impact on observed deer* **
+``` {r Moon}
+#testing hypothesis three - moon phase has no impact on deer observations
+moon.one.way <- aov(group_size ~ moon_phase, data = deer_data)
+moon.one <- summary(moon.one.way)
+moontable <- as.data.frame(moon.one[[1]])
+moontable %>% kbl(caption = "One-Way ANOVA") %>% kable_paper("hover", full_width = F)
+```
+The F value of 1.089 is associated with a p-value of 0.368. Since the p-value is greater than the conventional significance level (0.05), we fail to reject the null hypothesis. This suggests that **there is no significant difference** in the means of the groups based on the moon phases. Based on the results, moon phases do not appear to have a statistically significant effect on the amount of deer observed in the Duke Forest.
 
 
-ggplot(deer_data, aes(Time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Recorded", y = "Group Size")
+**Hypothesis Four - *The phase of the moon has no effect on the time of day deer are observed* **
+```{r Chi Square, message=FALSE, warning=FALSE}
+contigency_table <- table(deer_data$start_time, deer_data$moon_phase)
+chisq_result <- chisq.test(contigency_table)
+
+print(chisq_result)
+```
+The Chi-Square statistic (237.95) is substantial, indicating a substantial deviation from the expected frequencies based on the assumption of independence between the categorical variables. The extremely small p-value (7.687e-05) suggests strong evidence against the null hypothesis of independence. With a p-value below the conventional significance level (e.g., 0.05), **we reject the null hypothesis**. 
+
+Based on the results, there is sufficient evidence to conclude that **there is a significant association between the phase of the moon and the time of day deer are observed**. The observed frequencies differ significantly from what would be expected under the assumption of independence.
+
+### Visualizing the Models
+
+**One-Way ANOVA for Time of Day and Deer Observations**
+```{r ANOVA Model, message=FALSE, warning=FALSE}
+tukey.one.way <- TukeyHSD(time.one.way)
+tukeytable <- as.data.frame(tukey.one.way[[1]])
+tukeytable %>% kbl(caption = "Tukey Multiple Comparison of Means") %>% kable_paper("hover", full_width = F)
+
+plot(tukey.one.way, las = 1)
+```
+In summary, the Tukey HSD test **suggests that the `group_size` differs significantly between night and morning, while there is no significant difference between morning and day or night and day.** Keep in mind that the interpretation of p-values depends on the chosen significance level (commonly 0.05), and adjustments may be made for multiple comparisons.
 
 
-
-first_day <- day(first(deer_data$Date))
-first_month <- month(first(deer_data$Date))
-deer_ts <- ts(deer_data$group_size, start = c(first_month, first_day), frequency = 31)
-full_decomp <- stl(deer_ts,s.window = "periodic")
-plot(full_decomp)
-deer_trend <- Kendall::SeasonalMannKendall(deer_ts)
-deer_trend
-#tau = -0.101, 2-sided pvalue = 0.00060103
-
-#Seperate Months
-deer_data_march <- deer_data %>% mutate(Month = month(start_date)) %>% filter(Month == 3)
-deer_data_april <- deer_data %>% mutate(Month = month(start_date)) %>% filter(Month == 4)
-deer_data_may <- deer_data %>% mutate(Month = month(start_date)) %>% filter(Month == 5)
-
-#Looking at the data to determine which statistcal tests to run
-ggplot(deer_data_march, aes(start_time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Seen on Camera Trap", y = "Size of Group Seen")
-
-#There seems to be some kind of time series with deer in a group greater than two. 
-#Since it seems like 1 group is a large amount of the data, maybe we remove those and 
-#see if there is a time relationship
-march_biggroups <- deer_data_march %>% filter(group_size >= 2)
-ggplot(march_biggroups, aes(start_time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Seen on Camera Trap", y = "Size of Group Seen")
-
-#maybe there is a relationship - lets check another month to see if it is just March 
-ggplot(deer_data_april, aes(start_time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Seen on Camera Trap", y = "Size of Group Seen")
-april_biggroups <- deer_data_april %>% filter(group_size >= 2)
-ggplot(april_biggroups, aes(start_time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Seen on Camera Trap", y = "Size of Group Seen")
-
-#may
-ggplot(deer_data_may, aes(start_time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Seen on Camera Trap", y = "Size of Group Seen")
-may_biggroups <- deer_data_may %>% filter(group_size >= 2)
-ggplot(may_biggroups, aes(start_time, group_size)) + geom_point() + theme_classic() + labs(x = "Time Seen on Camera Trap", y = "Size of Group Seen")
-
-#not sure where to go from here, the plots don't necessarily suggest any relationship between group size and time seen. 
-#could look just at the april data, as it seems like there is the most observations from then (almost half the observations were recorded in april)
-
-#time series for april, group size by day
-f_day <- day(first(deer_data_april$start_date))
-f_month <- month(first(deer_data_april$start_date))
-april_ts <- ts(deer_data_april$group_size, start = c(f_month, f_day), frequency = 31)
-
-#decompose
-deer_decomp <- stl(april_ts,s.window = "periodic")
-plot(deer_decomp)
-
-# Run SMK test
-april_trend <- Kendall::SeasonalMannKendall(april_ts)
-april_trend 
-#tau = 0.0102, 2-sided p-value = 0.80434
-
-#where to go from here: look at the other two months worth of data (could be a problem, may not have enough observations)
-#potentially bring in weather data to see if temperature plays a role in how active the deer population is in the Duke Forest: https://wrcc.dri.edu/cgi-bin/rawMAIN.pl?laNDUK
-
+**Chi-Squared Model for Moon Phases and Time of Day**
+```{r Chi Square Model, message=FALSE, warning=FALSE}
+ggbarstats(data  = deer_data, x = moon_phase, y= TOD, label = "both")
 ```
 
-
-
-## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
-
-## Question 2: 
-
-
-
+The presented bar plot indicates a discernible influence of moon phase, particularly during the waning gibbous phase, on the temporal patterns of deer sightings. The data collection methodology, wherein the camera recorded instances exclusively when a deer was present, enables us to consider the recorded time (TOD) as indicative of deer sightings. Notably, there is a pronounced surge in deer sightings during daylight hours when the moon is in a waning gibbous phase. While morning and night also exhibit an increase in deer sightings, the magnitude of this increase is comparatively more pronounced during the day.
 
 \newpage
 
-# Summary and Conclusions
+## Summary and Conclusions
+**Interpretations**
 
+The outcomes of our statistical analyses yield discernible insights, prompting the rejection of null hypotheses one and four. Null hypothesis one's rejection signifies a discernible influence of time of day on deer sightings within the Duke Forest. Employing the Tukey Honest Significant Difference (HSD) test revealed a significant disparity in the number of deer observed between nighttime and morning periods. Although the ANOVA tests did not precisely pinpoint the time period with the highest deer sightings, they collectively provide compelling evidence suggesting increased deer activity during the morning and night compared to the day.
+
+The rejection of null hypothesis four implies a notable association between the moon's phase and the timing of deer observations in the Duke Forest. Specifically, a conspicuous rise in deer sightings during the daytime is evident during the waning gibbous phase. While morning and night also experience heightened deer sightings, the magnitude is comparatively subdued. Additional observations from the plot further highlight noteworthy observations concerning other moon phases — new moon, last quarter, full moon, and first quarter. Each are seemingly associated with some degree of limitation in deer observations. Particularly intriguing is the observation that the new moon phase corresponds to the lowest incidence of deer sightings. This could potentially be attributed to the absence of ambient light, resulting in total darkness and potentially obscuring the vision of the camera traps, unless equipped with night vision capabilities.
+
+In summary, the rejection of null hypotheses one and four underscores the influence of time of day and moon phase on deer observations in the Duke Forest. These findings provide a foundation for deeper explorations into the temporal dynamics of deer behavior, offering valuable insights for wildlife management and conservation considerations.
+
+
+**Limitations**
+
+The present study is subject to certain limitations that warrant consideration. Foremost among these limitations is the relatively modest sample size and the narrow time frame within which observations were conducted. The dataset spans a duration of three months, and the restricted number of observations poses challenges in establishing robust relationships. The limited temporal scope of the study may not capture the full spectrum of factors influencing deer behavior during the spring of 2023. 
+
+The brevity of the observational period raises concerns regarding the generalizability of findings, particularly in discerning nuanced patterns or relationships. The intricate interplay of various environmental and ecological factors, beyond the parameters of time of day and moon phase, may have influenced deer behavior during the specified period. The absence of an extended temporal context restricts the ability to differentiate between temporal idiosyncrasies specific to the spring of 2023 and broader trends recurring across multiple spring seasons.
+
+Furthermore, the inability to compare the spring of 2023 with analogous seasons over a more protracted timeframe limits the broader applicability of the study's findings. Without a comprehensive assessment across multiple spring seasons, the outcomes may be confounded by seasonal variations, hindering a conclusive determination of causality. In order to comprehensively elucidate the factors influencing deer behavior, future studies with extended observation periods and larger datasets encompassing diverse temporal contexts are imperative. Addressing these limitations would contribute to a more nuanced and robust understanding of the dynamics underpinning deer behavior in relation to time of day and moon phase.
+
+**Future Analysis**
+
+The current investigation lays the groundwork for a continuous and collaborative research initiative, closely aligned with the Duke Forest team's focus on camera trap data. This ongoing study is poised to evolve over time, leveraging the accumulation of additional data to facilitate a more comprehensive and robust statistical analysis. As the dataset expands, the study anticipates an enriched foundation for exploring intricate patterns and relationships within the observed phenomena.
+
+While our primary emphasis rested on the behavior of White-Tail Deer, it is noteworthy that a myriad of other species were documented in the observations. This diversity prompts an avenue for future exploration, suggesting a valuable opportunity to compare and contrast the findings related to White-Tail Deer with those of other species thriving within the Duke Forest ecosystem. Such an interdisciplinary approach could potentially unveil broader ecological insights and contribute to a more holistic understanding of the dynamics governing wildlife interactions. Spatial considerations also beckon attention, inviting an exploration of whether the behavior exhibited by White-Tail Deer in the Duke Forest is congruent with that of their counterparts in the surrounding Durham area. 
+
+In summary, the study's ongoing nature, collaborative framework, and interdisciplinary possibilities underscore its potential for continuous refinement and expansion. The integration of additional data, the exploration of diverse species, and the spatial analysis of deer behavior hold promise for deepening our understanding of wildlife dynamics within and beyond the Duke Forest ecosystem.
+
+
+---
 
 \newpage
 
