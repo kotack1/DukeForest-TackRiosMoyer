@@ -1,6 +1,6 @@
 ---
-title: "White Tail Deer Movement with Moon Phases"
-subtitle: "How does time of day and moon phase affect the movement of deer herds in the Duke Forest?"
+title: "Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera Traps"
+subtitle: "Effects of time of day and moon phase on the movement of deer herds in the Duke Forest"
 author: "Sophie Moyer, Grace Randall, Alejandra Rios, Katie Tack"
 date: "`r Sys.Date()`"
 output:
@@ -11,8 +11,10 @@ output:
 ---
 
 # List of Figures
- - [Figure 1: Herd Size & Time of Day](#fig1)
- - [Figure 2: Herd Size & Moon Phase]
+ - [Figure 1. Deer Sightings by Hour over March, April and May of 2023](#Visual Plot)
+ - [Figure 2. Histogram of Deer Observations](#Histogram)
+ - [Figure 3. Herd Size & Time of Day](#fig1)
+ - [Figure 4. Herd Size & Moon Phase](#fig2)
 
 
 ```{r setup, include=FALSE, warning=FALSE, message=FALSE}
@@ -74,7 +76,7 @@ cam_coords <- read.csv(here("Data", "Raw", "camera_coords.csv"))
 knitr::include_graphics(here("Images", "buck_day.jpg"))
 ```
 
-Hypothesis:
+### Hypotheses
 
 This research focused on the intricate dynamics of white-tailed deer movements within Duke Forest, particularly in relation to the time of day and the position of the moon. The objective was to ascertain the impact of these environmental factors on the spatial behavior of deer populations. Additionally, the study aimed to measure the frequency of deer visits to various areas of the forest, with a specific emphasis on understanding how these patterns correlate with nearby developmental activities. This approach provided valuable insights into the adaptability and movement patterns of white-tailed deer in response to anthropogenic changes in their habitat. The methodology and findings of this study offer a significant contribution to the understanding of wildlife ecology, particularly in areas experiencing urban development (Oleniacz).
 
@@ -206,7 +208,7 @@ deer_data <- inner_join(deer_data, moon_phases_csv, by = "start_date")
 
 ### Understanding the Data
 
-```{r Visual Plot, warning=FALSE, message=FALSE}
+```{r Visual Plot, warning=FALSE, message=FALSE, fig.cap='Figure 1. Deer Sightings by Hour over March, April and May of 2023'}
 deer_data <- deer_data %>%
   arrange(month, start_time)
 
@@ -224,7 +226,7 @@ ggplot(deer_hours, aes(x = start_time, y = sightings, group = month, color = as.
 The graphical representation delineates discernible peaks in deer sightings throughout the day, with particular emphasis on a notable surge in April during both the early morning and evening hours. This graphical depiction aligns with our initial hypothesis, posited as follows: *"The time of day has no discernible effect on deer observations."*
 
 
-```{r Histogram}
+```{r Histogram, message=FALSE, warning=FALSE, fig.cap='Figure 2. Histogram of Deer Observations'}
 h <- hist(deer_data$group_size, main = "Histogram of Deer Observations", xlab = "Group Size", xlim = c(0,7), ylim = c(0,650), col = "tan", border = "brown")
 text(h$mids,h$counts,labels=h$counts, adj=c(0.5, -0.5))
 ```
@@ -239,7 +241,7 @@ It is important to acknowledge that the observational data utilized in this stud
 
 ### Herd Size Scatter Plots
 
-```{r fig1, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%', fig.cap='Figure 1: Herd Size & Time of Day'}
+```{r fig1, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%', fig.cap='Figure 3. Herd Size & Time of Day'}
 #scatter plot of herd size and time of day
 scatter.deer.time.herd <- 
   ggplot(deer_cam_data, aes(x = start_time, y = group_size)) +
@@ -258,7 +260,7 @@ print(scatter.deer.time.herd)
 
 
 
-```{r fig2, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%', fig.cap='Figure 2: Herd Size & Moon Phase'}
+```{r fig2, echo=FALSE, warning=FALSE, message=FALSE, out.width='200%', out.height='200%', fig.cap='Figure 4. Herd Size & Moon Phase'}
 #insert image of phases of the moon for reference purposes
 knitr::include_graphics(here("Images", "moon_phases.png"))
 
@@ -381,6 +383,10 @@ print(deer.cam.time.heatmap)
 **Methods**
 
 In light of the available dataset, our analytical approach involves the application of analysis of variance (ANOVA) tests to assess the implications posited by hypotheses one and three. The underlying premise is to ascertain the absence of any discernible relationship between these variables, signifying an absence of influence from temporal and lunar factors on deer behavior. ANOVA is selected as the preferred statistical method for this investigation due to its efficacy in evaluating relationships between quantitative and categorical variables. In our specific context, group size is treated as a quantitative variable, while time of day (TOD) and moon phase are both considered categorical.
+
+Concurrently, hypothesis four is subjected to scrutiny via a chi-squared means test. This choice is informed by the categorical nature of the variables under consideration. The data collection methodology, wherein the camera exclusively records instances of deer presence, allows us to interpret the recorded time (TOD) as indicative of deer sightings. Consequently, in probing the potential influence of moon phase on the temporal patterns of deer sightings, we aptly employ the variables TOD and moon_phase.
+
+This methodological selection aligns with the distinct nature of the variables being examined, contributing to the robustness of our analytical framework. The rationale behind each statistical test is deliberately tailored to the specific characteristics of the data, thereby ensuring a comprehensive and contextually relevant analysis of the posed hypotheses.
 
 ### ANOVA and Chi Square Tests
 
