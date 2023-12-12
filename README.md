@@ -53,7 +53,7 @@ camera_coords.csv - Provided by Dr. Sarah Roberts at Duke University.
 
 moon_phases.csv - Created by Katie Tack using https://www.moongiant.com/phase/today/#google_vignette
 
-City_of_Durham_Boundary.shp - Provided by Dr. Sarah Roberts lab at Duke University. 
+City_of_Durham_Boundary.shp - Retrieved from the Durham, NC Open Data Portal. 
 
 
 ## Folder structure, file formats, and naming conventions 
