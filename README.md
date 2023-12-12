@@ -47,13 +47,13 @@ sophie.moyer@duke.edu
 
 ## Database Information
 
-sequences.csv - data collected from trail cameras in the Duke forest including camera id, species sighted, and date and time sighted. Provided by Dr. Sarah Roberts at Duke University. 
+sequences.csv - Provided by Dr. Sarah Roberts at Duke University. 
 
-camera_coords.csv - coordinates of cameras. Provided by Dr. Sarah Roberts at Duke University. 
+camera_coords.csv - Provided by Dr. Sarah Roberts at Duke University. 
 
-moon_phases.csv - describes the phase of moon
+moon_phases.csv - Created by Katie Tack using https://www.moongiant.com/phase/today/#google_vignette
 
-City_of_Durham_Boundary.shp - boundary used for spatial analysis within Duke forest. Provided by Dr. Sarah Roberts lab at Duke University. 
+City_of_Durham_Boundary.shp - Provided by Dr. Sarah Roberts lab at Duke University. 
 
 
 ## Folder structure, file formats, and naming conventions 
@@ -85,6 +85,14 @@ Data
  sequences.csv - deer sighting data
 
 ## Metadata
+
+sequences.csv - data collected from trail cameras in the Duke forest including camera id, species sighted, and date and time sighted. 
+
+camera_coords.csv - coordinates of cameras (longitude and latitude), camera id
+
+moon_phases.csv - describes the phase of moon.
+
+City_of_Durham_Boundary.shp - boundary used for spatial analysis within Duke forest.
 
 <For each data file in the repository, describe the data contained in each column. Include the column name, a description of the information, the class of data, and any units associated with the data. Create a list or table for each data file.> 
 
