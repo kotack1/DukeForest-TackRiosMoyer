@@ -374,8 +374,6 @@ mapview(cameras.sf,cex = 4, map.types="OpenStreetMap.Mapnik")
 
 ## Data Visualization & Plots:
 
-### Custom Theme for Plots
-
 ```{r Custom Theme, warning=FALSE, message=FALSE}
 #custom theme to use for plots
 custom.theme <- function() {
