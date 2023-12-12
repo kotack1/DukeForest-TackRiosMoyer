@@ -330,7 +330,7 @@ In summary, the study's ongoing nature, collaborative framework, and interdiscip
 
 ### SUBHEADING 1 HERE
 
-```{r INSERT INFO HERE3, warning=FALSE, message=FALSE}
+```{r Setting up Spacial Data, warning=FALSE, message=FALSE}
 #Bringing in Location data
 #duke_forest<- st_read("/home/guest/module1/DukeForest-TackRiosMoyer/Data/Raw/Duke_Forest_Boundary_Mar2022.shp")
 
@@ -343,20 +343,46 @@ Deer_location_data <- deer_cam_data%>%
   group_by(cam_id) %>%
   summarise(total_deer = sum(group_size))
 
+#join to locations
+Deer_location_data <- left_join(cameras.sf,Deer_location_data,by="cam_id")
+#set 0 sightings
+Deer_location_data$total_deer[is.na(Deer_location_data$total_deer)] <- 0
+
 Deer_location_data_morning <- deer_cam_data%>%
   filter(time_category=='Morning') %>%
   group_by(cam_id) %>%
   summarise(total_deer = sum(group_size))
+
+#join to locations
+Deer_location_data_morning <-
+  left_join(cameras.sf,Deer_location_data_morning,by="cam_id")
+#set 0 sightings
+Deer_location_data_morning$total_deer[
+  is.na(Deer_location_data_morning$total_deer)] <- 0
 
 Deer_location_data_afternoon  <- deer_cam_data%>%
   filter(time_category=='Afternoon') %>%
   group_by(cam_id) %>%
   summarise(total_deer = sum(group_size))
 
+#join to locations
+Deer_location_data_afternoon <-
+  left_join(cameras.sf,Deer_location_data_afternoon,by="cam_id")
+#set 0 sightings
+Deer_location_data_afternoon$total_deer[
+  is.na(Deer_location_data_afternoon$total_deer)] <- 0
+
 Deer_location_data_evening <- deer_cam_data%>%
   filter(time_category=='Evening') %>%
   group_by(cam_id) %>%
   summarise(total_deer = sum(group_size))
+
+#join to locations
+Deer_location_data_evening <-
+  left_join(cameras.sf,Deer_location_data_evening,by="cam_id")
+#set 0 sightings
+Deer_location_data_evening$total_deer[
+  is.na(Deer_location_data_evening$total_deer)] <- 0
 
 ```
 
@@ -365,16 +391,48 @@ Deer_location_data_evening <- deer_cam_data%>%
 
 ### SUBHEADING 2 HERE
 
-```{r INSERT INFO HERE4, warning=FALSE, message=FALSE}
+```{r Mapping Spacial Data, warning=FALSE, message=FALSE}
 #Plotting Camera sites and number of dear sighings at each one 
-mapview(cameras.sf,cex = 4, map.types="OpenStreetMap.Mapnik")
-#mapview(cameras.sf,cex = "sightings",map.types="OpenStreetMap.Mapnik")
+mapview(cameras.sf,cex = 4, map.types="OpenStreetMap.Mapnik",
+        layer.name="Location of Camera Traps")
 
-#plotting dear sighings at each camera trap for different times of the day 
+mapview(Deer_location_data,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer")
+
+#plotting dear sighings at each camera trap for different times of the day
+mapview(Deer_location_data_morning,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer in the Morning")
+
+mapview(Deer_location_data_afternoon,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer in the Afternoon")
+
+mapview(Deer_location_data_evening,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer in the Evening")
 
 ```
 
 ---
+
 
 ---
 
