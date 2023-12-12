@@ -233,8 +233,8 @@ The observational data pertaining to deer frequency underscores a prevailing tre
 
 It is important to acknowledge that the observational data utilized in this study pertains specifically to the spring of 2023. This temporal parameter bears significance as it may impact herd size, attributable to one or more of the factors elucidated earlier.
 
-**Source:**
-Kjellander, P., & Nordstrom, J. (2003). Cyclic voles, prey switching in red fox, and roe deer dynamics—a test of the alternative prey hypothesis. Oikos, 101(2), 338-344. doi:10.1034/j.1600-0706.2003.12118.x
+
+
 
 
 ### Herd Size Scatter Plots
@@ -376,7 +376,7 @@ print(deer.cam.time.heatmap)
 
 \newpage
 
-###Statistical Analysis
+# Statistical Analysis
 
 **Methods**
 
@@ -392,6 +392,7 @@ one.way.result <- summary(time.one.way)
 timeone <- as.data.frame(one.way.result[[1]])
 timeone %>% kbl(caption = "One-Way ANOVA") %>% kable_paper("hover", full_width = F)
 ```
+
 The p-value (Pr(>F)) is less than 0.05, indicating that there is **evidence to reject the null hypothesis.** Therefore, there is a statistically significant difference in means among the groups defined by `TOD`. However, the specific interpretation of which groups are different would require further post-hoc tests or examination of the group means.
 
 
@@ -403,6 +404,7 @@ moon.one <- summary(moon.one.way)
 moontable <- as.data.frame(moon.one[[1]])
 moontable %>% kbl(caption = "One-Way ANOVA") %>% kable_paper("hover", full_width = F)
 ```
+
 The F value of 1.089 is associated with a p-value of 0.368. Since the p-value is greater than the conventional significance level (0.05), we fail to reject the null hypothesis. This suggests that **there is no significant difference** in the means of the groups based on the moon phases. Based on the results, moon phases do not appear to have a statistically significant effect on the amount of deer observed in the Duke Forest.
 
 
@@ -413,6 +415,7 @@ chisq_result <- chisq.test(contigency_table)
 
 print(chisq_result)
 ```
+
 The Chi-Square statistic (237.95) is substantial, indicating a substantial deviation from the expected frequencies based on the assumption of independence between the categorical variables. The extremely small p-value (7.687e-05) suggests strong evidence against the null hypothesis of independence. With a p-value below the conventional significance level (e.g., 0.05), **we reject the null hypothesis**. 
 
 Based on the results, there is sufficient evidence to conclude that **there is a significant association between the phase of the moon and the time of day deer are observed**. The observed frequencies differ significantly from what would be expected under the assumption of independence.
@@ -427,6 +430,7 @@ tukeytable %>% kbl(caption = "Tukey Multiple Comparison of Means") %>% kable_pap
 
 plot(tukey.one.way, las = 1)
 ```
+
 In summary, the Tukey HSD test **suggests that the `group_size` differs significantly between night and morning, while there is no significant difference between morning and day or night and day.** Keep in mind that the interpretation of p-values depends on the chosen significance level (commonly 0.05), and adjustments may be made for multiple comparisons.
 
 
@@ -476,3 +480,4 @@ Duke University. (n.d.). Duke Forest – Teaching and Research Laboratory. Retri
 
 Oleniacz, L. (2022, October 27). Scientists track triangle deer to learn how they deal with development. NC State University. Retrieved from https://news.ncsu.edu/2022/10/scientists-track-triangle-deer-to-learn-how-they-deal-with-development/
 
+Kjellander, P., & Nordstrom, J. (2003). Cyclic voles, prey switching in red fox, and roe deer dynamics—a test of the alternative prey hypothesis. Oikos, 101(2), 338-344. doi:10.1034/j.1600-0706.2003.12118.x
