@@ -329,6 +329,24 @@ cameras.sf <- st_as_sf(cam_coordinates, coords = c("longitude","latitude"),
            crs=4326)
 
 #wrangling to include number of deer sightings at each location
+Deer_location_data <- deer_cam_data%>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+Deer_location_data_morning <- deer_cam_data%>%
+  filter(time_category=='Morning') %>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+Deer_location_data_afternoon  <- deer_cam_data%>%
+  filter(time_category=='Afternoon') %>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+Deer_location_data_evening <- deer_cam_data%>%
+  filter(time_category=='Evening') %>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
 
 ```
 
