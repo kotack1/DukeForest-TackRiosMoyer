@@ -94,11 +94,53 @@ moon_phases.csv - describes the phase of moon.
 
 City_of_Durham_Boundary.shp - boundary used for spatial analysis within Duke forest.
 
-<For each data file in the repository, describe the data contained in each column. Include the column name, a description of the information, the class of data, and any units associated with the data. Create a list or table for each data file.> 
-
 ## Scripts and code
 
-<list any software scripts/code contained in the repository and a description of their purpose.>
+here() - constructing file paths relative to the top-level directory of your R project.
+
+theme() - part of ggplot package, customizes non-data components of plots
+
+read.csv() - importing data from CSV (Comma-Separated Values) files into R as data frames
+
+knitr::include_graphics() - part of the knitr package used to include external images
+
+ymd_hms() - used for sorting, storing, and manipulating date-time data 
+
+as.Date() - used to convert various types of data into date objects
+
+filter() - part of the dplyr package used to select rows from a data frame
+
+select() - part of the dplyr package used to select columns
+
+mutate() - part of the dplyr package used to creating new columns in a data frame or modify existing ones.
+
+left_join() - part of the dplyr package used to merge two data frames by columns
+
+as.numeric() - function used to convert an object to numeric 
+
+ifelse() - used to evaluate a condition and return one value if the condition is true and another value if it is false. 
+
+cut() - used to divide the range of a numeric vector 
+
+st_read() - part of the sf package used to read simple features from a file
+
+mapview() - part of mapview package used for viewing of spatial data
+
+ggplot() - part of ggplot2 package used for creating plots and charts 
+
+print() - used to output an R product
+
+min() - finds the minimum value in a dataset
+
+max() - finds the maximum value in a dataset
+
+median() - finds the median value in a dataset
+
+ts() - used to create a time series object from a numeric vector 
+
+Kendall::SeasonalMannKendall() - used to perform the Seasonal Mann-Kendall test, a non-parametric method for identifying trends in seasonal time series data
+
+stl() - used for performing a Seasonal Decomposition of Time Series by Loess, a method for decompsing a time series into seasonal, trend, and irregular components using loess smoothing. 
 
 ## Quality assurance/quality control
 
