@@ -190,7 +190,14 @@ deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phas
 ### SUBHEADING 1 HERE
 
 ```{r INSERT INFO HERE3, warning=FALSE, message=FALSE}
-#CODE CHUNK 1 HERE
+#Bringing in Location data
+#duke_forest<- st_read("/home/guest/module1/DukeForest-TackRiosMoyer/Data/Raw/Duke_Forest_Boundary_Mar2022.shp")
+
+#converting camera points to locations
+cameras.sf <- st_as_sf(cam_coordinates, coords = c("longitude","latitude"),
+           crs=4326)
+
+#wrangling to include number of deer sightings at each location
 
 ```
 
@@ -200,7 +207,11 @@ deer_cam_data$moon_type <- sapply(deer_cam_data$moon_phase, categorize_moon_phas
 ### SUBHEADING 2 HERE
 
 ```{r INSERT INFO HERE4, warning=FALSE, message=FALSE}
-#CODE CHUNK 2 HERE
+#Plotting Camera sites and number of dear sighings at each one 
+mapview(cameras.sf,cex = 4, map.types="OpenStreetMap.Mapnik")
+#mapview(cameras.sf,cex = "sightings",map.types="OpenStreetMap.Mapnik")
+
+#plotting dear sighings at each camera trap for different times of the day 
 
 ```
 
