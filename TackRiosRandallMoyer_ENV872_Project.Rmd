@@ -377,8 +377,122 @@ print(deer.cam.time.heatmap)
 
 # Spactial Analysis
 
+In order to get a better idea of the behavior of deer over the area covered by the camera traps, we also looked at number of different deer signtings at each of the camera traps. the total number of deer sighted in an area was considered to be the sum of the number of deer in the group in each sighting accross all the sightings at the camera trap. The density of deer was considered overall and also compared over different times of day to see if any patternes were visible.
+
+```{r Setting up Spacial Data, warning=FALSE, message=FALSE}
+
+#converting camera points to locations
+cameras.sf <- st_as_sf(cam_coordinates, coords = c("longitude","latitude"),
+           crs=4326)
+
+#wrangling to include number of deer sightings at each location
+Deer_location_data <- deer_cam_data%>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+#join to locations
+Deer_location_data <- left_join(cameras.sf,Deer_location_data,by="cam_id")
+#set 0 sightings
+Deer_location_data$total_deer[is.na(Deer_location_data$total_deer)] <- 0
+
+Deer_location_data_morning <- deer_cam_data%>%
+  filter(time_category=='Morning') %>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+#join to locations
+Deer_location_data_morning <-
+  left_join(cameras.sf,Deer_location_data_morning,by="cam_id")
+#set 0 sightings
+Deer_location_data_morning$total_deer[
+  is.na(Deer_location_data_morning$total_deer)] <- 0
+
+Deer_location_data_afternoon  <- deer_cam_data%>%
+  filter(time_category=='Afternoon') %>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+#join to locations
+Deer_location_data_afternoon <-
+  left_join(cameras.sf,Deer_location_data_afternoon,by="cam_id")
+#set 0 sightings
+Deer_location_data_afternoon$total_deer[
+  is.na(Deer_location_data_afternoon$total_deer)] <- 0
+
+Deer_location_data_evening <- deer_cam_data%>%
+  filter(time_category=='Evening') %>%
+  group_by(cam_id) %>%
+  summarise(total_deer = sum(group_size))
+
+#join to locations
+Deer_location_data_evening <-
+  left_join(cameras.sf,Deer_location_data_evening,by="cam_id")
+#set 0 sightings
+Deer_location_data_evening$total_deer[
+  is.na(Deer_location_data_evening$total_deer)] <- 0
+
+```
 
 
+---
+
+### Maps
+
+```{r Mapping Spacial Data 1, message=FALSE, warning=FALSE, fig.cap='Map of locations of camera traps in the Duke Forest'}
+#Plotting Camera sites and number of dear sighings at each one 
+mapview(cameras.sf,cex = 4, map.types="OpenStreetMap.Mapnik",
+        layer.name="Location of Camera Traps")
+```
+Map of locations of camera traps in the Duke Forest
+
+```{r Mapping Spacial Data 2, message=FALSE, warning=FALSE, fig.cap='Map of number of deer seen in the Duke forest'}
+
+mapview(Deer_location_data,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer")
+```
+Map of number of deer seen in the Duke forest
+
+```{r Mapping Spacial Data 3, message=FALSE, warning=FALSE, fig.cap='Map of number of deer seen during the morning'}
+#plotting dear sighings at each camera trap for different times of the day
+mapview(Deer_location_data_morning,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer in the Morning")
+```
+Map of number of deer seen during the morning
+
+```{r Mapping Spacial Data 4, message=FALSE, warning=FALSE, fig.cap='Map of number of deer seen during the afternoon'}
+mapview(Deer_location_data_afternoon,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer in the Afternoon")
+```
+Map of number of deer seen during the afternoon
+
+```{r Mapping Spacial Data 5, message=FALSE, warning=FALSE, fig.cap='Map of number of deer seen during the evening'}
+mapview(Deer_location_data_evening,
+        cex = 5,
+        map.types="OpenStreetMap.Mapnik",
+        col.regions=heat.colors(10,rev=TRUE),
+        na.color="white",
+        zcol="total_deer",
+        layer.name="Number of Deer in the Evening")
+
+```
+Map of number of deer seen during the evening
+
+Throughout these maps there does not appear to be a strong relationship between where time of the day and the location of the deer. Nor does there seem to a relationship between the number of deer present and the closeness to development. Some of the locations with the highest number of deer sightings are in smaller sections of forest or close to human infrastructure, such as the camera trap near the Eubanks Road. This data of course can not give us a complete idea of spatial behavior of the deer because camera traps only give information about presence or absence at very specific locations.  
 
 \newpage
 
