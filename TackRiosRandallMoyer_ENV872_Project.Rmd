@@ -375,6 +375,10 @@ deer.cam.time.heatmap <-
 print(deer.cam.time.heatmap)
 ```
 
+# Spactial Analysis
+
+
+
 
 \newpage
 
