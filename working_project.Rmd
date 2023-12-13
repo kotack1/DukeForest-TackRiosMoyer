@@ -1,12 +1,14 @@
 ---
-title: "Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera Traps"
-subtitle: "How does time of day and moon phase affect the movement of deer herds in the Duke Forest?"
+title: "Tracking White-Tailed Deer Movement Patterns in the Duke Forest using Camera
+  Traps"
+  subtitle: How does time of day and moon phase affect the movement of deer herds in
+  the Duke Forest?
 author: "Sophie Moyer, Grace Randall, Ale Rios, Katie Tack"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    toc: true
-    code_folding: hide
+  bookdown::html_document2
+  
+
 ---
 
 ## Content: 
@@ -573,6 +575,7 @@ deer.cam.time.heatmap <-
   custom.theme()
 
 print(deer.cam.time.heatmap)
+
 ```
 
 
