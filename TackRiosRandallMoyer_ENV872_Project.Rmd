@@ -10,6 +10,7 @@ output:
     theme: cosmo
 ---
 
+  Project GitHub Repository: <https://github.com/kotack1/DukeForest-TackRiosMoyer>
 
 # List of Figures {.unnumbered}
 
