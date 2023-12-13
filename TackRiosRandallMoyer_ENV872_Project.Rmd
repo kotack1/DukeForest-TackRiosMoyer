@@ -508,9 +508,9 @@ When starting this project, we hoped to conduct a spatial analysis of deer obser
 
 **Methods**
 
-In light of the available dataset, our analytical approach involves the application of `analysis of variance (ANOVA) tests` to assess the implications posited by hypotheses one and three. The underlying premise is to ascertain the absence of any discernible relationship between these variables, signifying an absence of influence from temporal and lunar factors on deer behavior. ANOVA is selected as the preferred statistical method for this investigation due to its efficacy in evaluating relationships between quantitative and categorical variables. In our specific context, group size is treated as a quantitative variable, while time of day (TOD) and moon phase are both considered categorical.
+Our statistical approach involves the application of `analysis of variance (ANOVA) tests` to investigate hypotheses one and three. As a reminder, these null hypotheses poist  there will be no relation between deer observations and time of day or moon phases, respectively. ANOVA has been selected as the preferred statistical method for this portion of the project due to its efficacy in evaluating relationships between quantitative and categorical variables. In our specific context, deer observations (`group_size`) is treated as a quantitative variable, while time of day (`TOD`) and moon phase (`moon_phase`) are both considered categorical.
 
-Concurrently, hypothesis four is subjected to scrutiny via a `chi-squared means test`. This choice is informed by the categorical nature of the variables under consideration. The data collection methodology, wherein the camera exclusively records instances of deer presence, allows us to interpret the recorded time (TOD) as indicative of deer sightings. Consequently, in probing the potential influence of moon phase on the temporal patterns of deer sightings, we aptly employ the variables TOD and moon_phase.
+To test hypothesis four, we have selected to use a `chi-squared means test`. To repeat, this null hypothesis poists that there is no relationship between moon phase and the time of day deer are observed. A Chi-Squared Means test was selected here due to the non-binary categorical nature of the variables under consideration. In our data, there are eight possible moon phases and three possible times of day, which we created earlier in our data wrangling section. Due to how our data has been collected, we are able to treat each entry of time of day as an deer observation additionally (data was only logged when an animal set off the camera). This analysis does not consider the amount of deer observed.
 
 ### ANOVA and Chi Square Tests {.unnumbered}
 
@@ -524,7 +524,7 @@ timeone <- as.data.frame(one.way.result[[1]])
 timeone %>% kbl(caption = "One-Way ANOVA") %>% kable_paper("hover", full_width = F)
 ```
 
-The **p-value (Pr(\>F)) is less than 0.05**, indicating that there is `evidence to reject the null hypothesis`. Therefore, there is a statistically significant difference in means among the groups defined by TOD. However, the specific interpretation of which groups are different would require further post-hoc tests or examination of the group means.
+The *p-value (Pr(\>F)) is less than 0.05*, indicating that there is `evidence to reject the null hypothesis`. Therefore, there is a statistically significant difference in means among the groups defined by TOD. However, the specific interpretation of which groups are different will require further post-hoc tests or examination of the group means.
 
 **Hypothesis Three - *The phase of the moon has no impact on observed deer***
 
@@ -536,7 +536,7 @@ moontable <- as.data.frame(moon.one[[1]])
 moontable %>% kbl(caption = "One-Way ANOVA") %>% kable_paper("hover", full_width = F)
 ```
 
-The **F value of 1.089** is associated with a **p-value of 0.368**. Since the p-value is greater than the conventional significance level (0.05), we fail to reject the null hypothesis. This suggests that `there is no significant difference` in the means of the groups based on the moon phases. Based on the results, moon phases do not appear to have a statistically significant effect on the amount of deer observed in the Duke Forest.
+The F value of 1.089 is associated with a *p-value of 0.368*. Since the p-value is greater than the conventional significance level (0.05), we fail to reject the null hypothesis. This suggests that `there is no significant difference` in the means of the groups based on the moon phases. Based on the results, moon phases do not appear to have a statistically significant effect on the amount of deer observed in the Duke Forest.
 
 **Hypothesis Four - *The phase of the moon has no effect on the time of day deer are observed***
 
@@ -547,9 +547,7 @@ chisq_result <- chisq.test(contigency_table)
 print(chisq_result)
 ```
 
-The Chi-Square statistic (237.95) is substantial, indicating a substantial deviation from the expected frequencies based on the assumption of independence between the categorical variables. The extremely small p-value (7.687e-05) suggests strong evidence against the null hypothesis of independence. With a p-value below the conventional significance level (e.g., 0.05), `we reject the null hypothesis`.
-
-Based on the results, there is sufficient evidence to conclude that there is a significant association between the phase of the moon and the time of day deer are observed. The observed frequencies differ significantly from what would be expected under the assumption of independence.
+The Chi-Square statistic (237.95) is substantial, indicating a substantial deviation from the expected frequencies based on the assumption of independence. The extremely small p-value of *7.687e-05* suggests strong evidence against the null hypothesis of independence. With a p-value below the conventional significance level, `we reject the null hypothesis` and conclude that there is a significant association between the phase of the moon and the time of day deer are observed. 
 
 ### Visualizing the Models {.unnumbered}
 
@@ -563,7 +561,7 @@ tukeytable %>% kbl(caption = "Tukey Multiple Comparison of Means") %>% kable_pap
 plot(tukey.one.way, las = 1)
 ```
 
-In summary, the Tukey HSD test suggests that the `group_size differs significantly between night and morning`, while there is no significant difference between morning and day or night and day. Keep in mind that the interpretation of p-values depends on the chosen significance level (commonly 0.05), and adjustments may be made for multiple comparisons.
+In summary, the Tukey HSD test suggests that the `group_size differs significantly between night and morning`, while there is no significant difference between morning and day or night and day. 
 
 **Chi-Squared Model for Moon Phases and Time of Day**
 
@@ -597,11 +595,10 @@ Furthermore, the inability to compare the spring of 2023 with analogous seasons 
 
 ## Future Analysis {.unnumbered}
 
-The current investigation lays the groundwork for a continuous and collaborative research initiative, closely aligned with the Duke Forest team's focus on camera trap data. This ongoing study is poised to evolve over time, leveraging the accumulation of additional data to facilitate more comprehensive and robust statistical and spatial analyses. As the dataset expands, the study anticipates an enriched foundation for exploring intricate patterns and relationships within the observed phenomena.
+The current investigation lays the groundwork for a continuous and collaborative research initiative, closely aligned with the Duke Forest team's focus on camera trap data. As the dataset expands, we anticipate an enriched foundation for exploring intricate patterns and relationships within the observed phenomena.
 
-While our primary emphasis rested on the behavior of White-Tail Deer, it is noteworthy that a myriad of other species were documented in the observations. This diversity prompts an avenue for future exploration, suggesting a valuable opportunity to compare and contrast the findings related to White-Tail Deer with those of other species thriving within the Duke Forest ecosystem. Such an interdisciplinary approach could potentially unveil broader ecological insights and contribute to a more holistic understanding of the dynamics governing wildlife interactions. Spatial considerations also beckon attention, inviting an exploration of whether the behavior exhibited by White-Tail Deer in the Duke Forest is congruent with that of their counterparts in the surrounding Durham area.
+While our primary emphasis rested on the behavior of White-Tail Deer, it is noteworthy that several other species were documented in the observations. This diversity prompts an avenue for future exploration, suggesting a valuable opportunity to compare the findings related to White-Tail Deer with those of other species thriving within the Duke Forest ecosystem. This approach could potentially unveil broader ecological insights and contribute to a more holistic understanding of the dynamics governing wildlife interactions in this location. Spatial considerations also must be made, inviting an exploration of whether the behavior exhibited by White-Tail Deer in the Duke Forest is congruent with that of their counterparts in the surrounding Durham area.
 
-In summary, the study's ongoing nature, collaborative framework, and interdisciplinary possibilities underscore its potential for continuous refinement and expansion. The integration of additional data, the exploration of diverse species, and the spatial analysis of deer behavior hold promise for deepening our understanding of wildlife dynamics within and beyond the Duke Forest ecosystem.
 
 ```{r Doe Image, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::include_graphics(here("Images", "doe_day.jpg"))
