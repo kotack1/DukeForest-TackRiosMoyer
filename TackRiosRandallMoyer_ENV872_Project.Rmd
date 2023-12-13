@@ -155,6 +155,10 @@ deer_cam_data <- left_join(deer_data, cam_coordinates, by = "cam_id") %>%
   select(common_name, start_date, start_time, group_size, cam_id, division, longitude, latitude, month, month_name)
 deer_cam_data <- left_join(deer_cam_data, moon_phases_csv, by = "start_date")
 
+#write .csv file for processed data
+write.csv(deer_cam_data, file = "deer_and_moonphases_processed.csv")
+
+
 #categorize hours into groups
 deer_cam_data$start_time <- as.numeric(deer_cam_data$start_time)
 categorize_time <- function(hour) {
