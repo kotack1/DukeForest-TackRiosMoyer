@@ -229,8 +229,7 @@ ggplot(deer_hours, aes(x = start_time, y = sightings, group = month, color = as.
   scale_color_discrete(name = "Month") + custom.theme() + facet_wrap(~ month_name, ncol = 1)
 ```
 
-The graphical representation delineates discernible peaks in deer sightings throughout the day, with particular emphasis on a notable surge in April during both the early morning and evening hours. This graphical depiction aligns with our initial hypothesis, posited as follows: *"The time of day has no discernible effect on deer observations."*
-
+The graphical representation delineates discernible peaks in deer sightings throughout the day, with particular emphasis on a notable surge in April during both the early morning and evening hours. 
 
 ```{r Histogram, echo=FALSE, fig.cap='Figure 2. Histogram of Deer Sightings by Hour documented in Spring 2023', message=FALSE, warning=FALSE}
 h <- hist(deer_data$group_size, main = "Histogram of Deer Observations", xlab = "Group Size", xlim = c(0,7), ylim = c(0,650), col = "tan", border = "brown")
