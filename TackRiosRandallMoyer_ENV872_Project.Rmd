@@ -243,6 +243,8 @@ It is important to acknowledge that the observational data utilized in this stud
 
 ### Scatter Plots {.unnumbered}
 
+The following two plots look at factors that may affect the size of the herd observed in the Duke Forest. These are the time of day and the moon phase.
+
 ```{r fig1, echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', out.height='100%', fig.cap='Herd Size & Time of Day'}
 #scatter plot of herd size and time of day
 scatter.deer.time.herd <- 
@@ -259,6 +261,9 @@ scatter.deer.time.herd <-
 print(scatter.deer.time.herd)
 
 ```
+
+The plot shows how the size of the observed herds changes depending on the time of day. There is a small change, showing that larger herd sizes are observed closer to dawn and dusk rather than around noon. 
+
 
 ```{r MoonPhoto, echo=FALSE, out.height='200%', out.width='200%', message=FALSE, warning=FALSE}
 #insert image of phases of the moon for reference purposes
@@ -285,6 +290,9 @@ print(scatter.deer.moon.herd)
 
 ```
 
+
+As seen here, larger herds, and thus more overall deer, as seen more often during the full moon and the phases surrounding the full moon (waxing gibbous and waning gibbous). Smaller herd sizes are observed around the new moon. This was exptected to be the result as deer are generally more likely to be found in fields during the new moon and in forests during the full moon due to light levels. There does appear to be the outlier in waning crescent, showing that other factors are likely to be affecting observed herd size at the same time as moon phase.
+
 ### Time of Day Scatter Plots {.unnumbered}
 
 ```{r MoonPhaseandTOD, echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', out.height='100%', fig.cap= 'Deer Sightings by Moon Phase and Time of Day'}
@@ -298,11 +306,15 @@ scatter.deer.moon.time <-
     x = "Moon Phase",
     y = "Time of Day (hour)"
   ) +
+   scale_x_discrete(labels = c("new moon", "waxing crescent", "first quarter", "waxing gibbous", "full moon", "waning gibbous", "third quarter", "waning crescent")) +
   custom.theme()
 
 print(scatter.deer.moon.time)
 
 ```
+
+This plot shows what time of day deer were observed in based on the phase of the moon. Although there were far fewer deer observed during the new moon than the full moon, this data does not show much correlation between moon phase and time of day. Waning crescent has sightings at all hours of the day but waxing gibbous had the fewest difference in time sightings out of all of the moon phases. More data would be needed to determine why the results are not as was anticipated. Temperature, weather, and movement of predators are all factors that may have affected this data in an unpredicted way.
+
 
 ```{r MonthandTOD, echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', out.height='100%', fig.cap= 'Deer Sightings by Month and Time of Day'}
 #scatter plot of month and time of day, sorted by herd size
@@ -323,6 +335,9 @@ print(scatter.deer.time.month)
 
 ```
 
+This plot combines the previous plots and looks at month and time of day as factors for observed herd size. Although more deer were observed in April and May than in March, this may be due to the fact that all of the cameras had not been placed in the forest yet, and thus there was less data to work off of. Taking that into account, herds being observed towards the beginning and end of the day rather than in the middle remains consistent throughout all of the recorded months. This shows that, at least during the spring months, time of day remains a steady factor. Herd size also varies throughout the day in every month, with no consistent pattern of behavior.  
+
+
 ```{r MonthandMoon, echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', out.height='100%', fig.cap='Deer Sightings by Month and Moon Phase'}
 scatter.deer.time.day.moon <- 
   ggplot(deer_cam_data, aes(x = start_date, y = moon_type, color = time_category)) +
@@ -340,6 +355,15 @@ print(scatter.deer.time.day.moon)
 
 ```
 
+Looking at the previous data in a different way, however, shows more of a pattern. Most of the deer observed in March were observed in the afternoon regardless of the phase of moon, but were still mostly present in the afternoon during a full (or near full) moon. During new (or near new) moon, they were consistently observed at all hours.
+
+In April, this changed so that very few deer were observed in the afternoon at all, regardless of moon phase. Instead, they were mainly seen in the morning across the entire month.
+
+In May, the observed behavior became more random with no consistent pattern in any moon phase of time of day.
+
+These changes in behavior may be due to the hours of daylight increasing as it got closer to the Summer solstice.  
+
+
 ### Heatmaps {.unnumbered}
 
 ```{r Heat1, echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', out.height='100%', fig.cap='Deer Sightings by Moon Phase and Time of Day'}
@@ -354,10 +378,14 @@ deer.moon.time.heatmap <-
     y = "Time of Day (hour)",
     fill = "Herd Size"
   ) +
+  scale_x_discrete(labels = c("new moon", "waxing crescent", "first quarter", "waxing gibbous", "full moon", "waning gibbous", "third quarter", "waning crescent")) +
   custom.theme()
 
 print(deer.moon.time.heatmap)
 ```
+
+This heatmap is another way of looking at the Deer Sightings by Moon Phase and Time of Day chart seen above. It includes herd size into the data, and further pushes forth the unpredictablity of herd size using the factors that were considered in this research. As it does not match up with expected and known deer behavior, it is likely that other factors are affecting this behavior. More research must be conducted with new variables. 
+
 
 ```{r Heat2, echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', out.height='100%', fig.cap='Deer Sightings by Time of day and Camera Trap Location'}
 deer.cam.time.heatmap <- 
@@ -378,6 +406,9 @@ deer.cam.time.heatmap <-
 print(deer.cam.time.heatmap)
 
 ```
+
+The final heatmap shows how the observed herd size changes based on time of day and camera trap. Some camera traps saw more movement than others. Some camera traps also recorded larger herd sizes more consistently than others. This may be due to their location near roads, water bodies, structures, etc. 
+
 
 # Spatial Analysis {.unnumbered}
 
